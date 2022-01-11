@@ -1,6 +1,6 @@
 {
-    "name": "TestPWA",
-    "short_name": "TestPWA",
+    "name": "umuBingo",
+    "short_name": "umuBingo",
     "start_url": "/?home=true",
     "icons": [
         {
