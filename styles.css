@@ -1,0 +1,21 @@
+.header {
+    border-radius: 25px;
+    padding: 60px;
+    text-align: center;
+    background: #a200ff;
+    color: white;
+    font-size: 30px;
+  }
+
+  .button {
+    border-radius: 30px;
+    background-color: #c300ff;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 auto;
+    display: block;
+  }
