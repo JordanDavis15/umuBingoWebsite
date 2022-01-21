@@ -13,7 +13,8 @@ function createBoardButtons(){
         for(j = 0; j < 5; j++){
             btnArr[i][j]= document.createElement("button");
             btnArr[i][j].id = 'b' + i + j;
-            btnArr[i][j].value = btnArr[i][j].id;
+            btnArr[i][j].name = btnArr[i][j].id+'TEXT'; //this is the value recieved in the post req
+            btnArr[i][j].textContent = btnArr[i][j].name = btnArr[i][j].id+'TEXT';;
             btnArr[i][j].addEventListener("click", myFunction);
            // btnArr[i][j].addEventListener("click", myfunction(btnArr[i][j].id))
             //console.log(btnArr[i][j].onclick)
