@@ -7,11 +7,13 @@ function myFunction(){
 
 var btnArr = [];
 function createBoardButtons(){
+    console.log("creating board buttons");
     for(i = 0; i < 5; i++){
         btnArr[i] = new Array();
         for(j = 0; j < 5; j++){
             btnArr[i][j]= document.createElement("button");
             btnArr[i][j].id = 'b' + i + j;
+            btnArr[i][j].value = btnArr[i][j].id;
             btnArr[i][j].addEventListener("click", myFunction);
            // btnArr[i][j].addEventListener("click", myfunction(btnArr[i][j].id))
             //console.log(btnArr[i][j].onclick)

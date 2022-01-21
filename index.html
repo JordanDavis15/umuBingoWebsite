@@ -4,12 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width", initial-scale=1.0>
         <title>UMU Bingo</title>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-        <link rel="icon" href="/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="styles.css">
-        <script type = "text/javascript" src="funcs.js"></script>
+        <link href="/favicon.ico" type="image/x-icon">
+        <link href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/public/styles.css">
+        <script type="text/javascript" src="/public/funcs.js"></script>
+        
 
-        <link rel="manifest" href="manifest.json">
+        <link href="/public/manifest.json">
 
         <!-- apple icons for PWA-->
         <link rel="apple-touch-icon" href="icons/apple-icon-180.png">
@@ -48,7 +49,7 @@
     <body>
         <header class="header">UMU Bingo</header>
 
-        <script>
+        <!--script>
             console.log("before registered service worker");
             if ('serviceWorker' in navigator){
                 console.log("creating service worker")
@@ -62,25 +63,27 @@
                 //    console.log("after registered service worker");
                 //});
             }
-        </script>
+        </script-->
     </body>
 
     <body>
         <div class="btn-group-header">
             <!--input type = "button" onclick = "myfunction()" value = "Welcome"-->
-            <button onclick="myfunction()">B</button>
-            <button onclick="myfunction()">I</button>
-            <button onclick="myfunction()">N</button>
-            <button onclick="myfunction()">G</button>
-            <button onclick="myfunction()">O</button>
+            <button onclick="myFunction(this)">B</button>
+            <button onclick="myFunction()">I</button>
+            <button onclick="myFunction()">N</button>
+            <button onclick="myFunction()">G</button>
+            <button onclick="myFunction()">O</button>
         </div>
     </body>
 
     <body onload="createBoardButtons()">
-        <div id="d0">   </div>
-        <div id="d1">   </div>
-        <div id="d2">   </div>
-        <div id="d3">   </div>
-        <div id="d4">   </div>
-    </body>
+        <form action="" method="post">
+            <div id="d0">   </div>
+            <div id="d1">   </div>
+            <div id="d2">   </div>
+            <div id="d3">   </div>
+            <div id="d4">   </div>
+        </form>
+    </body> 
 </html>
