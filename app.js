@@ -1,7 +1,9 @@
 var express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var app = express();
+app.use(cookieParser());
 
 //app.use(bodyParser.urlencoded({ extended: false }))
 //app.use(bodyParser.json())
@@ -22,13 +24,16 @@ app.get('/', function (req, res) {
 app.post("/", function(req, res) {
     var body = req.body;
     console.log(body);  
-    console.log("w"+body.SOLaddr);
+    
     if(body.SOLaddr != undefined){ //this is how to test if post was a certain object
         console.log("SOL address entered = " + body.SOLaddr); //access the value of the json like this
+        res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+    }
+    else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
+        console.log("Current user: " + req.cookies.userid);
     }
     
 
-      
     res.send("post recieved");
   });
 
