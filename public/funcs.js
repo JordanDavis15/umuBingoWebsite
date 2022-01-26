@@ -48,6 +48,8 @@ function createTable(){
             
             document.getElementById("tr" + i).appendChild(btnArr[i][j]);
             document.getElementById("td" + i + j).className = "tableData";
+            document.getElementById("tr" + i).className = "tableDataGroups";
+            
         }
         
     }

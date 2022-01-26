@@ -104,7 +104,7 @@ table, th, td {
   border: 1px solid #ffffff;
   border-collapse: collapse;
 }
-th {
+.tableHeader th {
   background-color: #8100cc;
   border-radius: 10px;
   height: 3em;
@@ -112,10 +112,19 @@ th {
 }
 .tableData td{
   background-color: #a200ff;
+
   border-radius: 10px;
   height: 3em;
   text-align: center;
 }
-.tableData td:hover{
+
+.tableDataGroups td{
+  background-color: #a200ff;
+  color: #ffffff;
+  border-radius: 10px;
+  height: 3em;
+  text-align: center;
+}
+.tableDataGroups td:hover{
   background-color: #8100cc;
 }
