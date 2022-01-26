@@ -80,3 +80,18 @@
 .btn-group-board button:hover {
   background-color: rgb(114, 5, 165);
 }
+
+/********Login button 1/23/22*/
+.btn-login button{
+  background-color: #a200ff;
+  color: white;
+  top: 40px;
+  right: 70px;
+  height: 75px;
+  width: 175px;
+}
+
+/* Add a background color on hover */
+.btn-login button:hover {
+  background-color: rgb(114, 5, 165);
+}

@@ -22,10 +22,22 @@ app.get('/', function (req, res) {
 app.post("/", function(req, res) {
     var body = req.body;
     console.log(body);  
-    result = body;
+    console.log("w"+body.SOLaddr);
+    if(body.SOLaddr != undefined){ //this is how to test if post was a certain object
+        console.log("SOL address entered = " + body.SOLaddr); //access the value of the json like this
+    }
+    
+
       
-    res.send("Body: " + result);
+    res.send("post recieved");
   });
+
+
+// Route to Login Page
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
+  });
+
 /*
 app.post('/submit-data', function (req, res) {
     var name = req.body.firstName + ' ' + req.body.lastName;
