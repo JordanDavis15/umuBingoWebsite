@@ -95,3 +95,27 @@
 .btn-login button:hover {
   background-color: rgb(114, 5, 165);
 }
+
+table{
+  width: 65%;
+  
+}
+table, th, td {
+  border: 1px solid #ffffff;
+  border-collapse: collapse;
+}
+th {
+  background-color: #8100cc;
+  border-radius: 10px;
+  height: 3em;
+  text-align: center;
+}
+.tableData td{
+  background-color: #a200ff;
+  border-radius: 10px;
+  height: 3em;
+  text-align: center;
+}
+.tableData td:hover{
+  background-color: #8100cc;
+}
