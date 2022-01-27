@@ -1,0 +1,17 @@
+dist: bionic
+jobs:
+  include:
+  - stage: build docker image
+    script:
+    - export IMAGE="$DOCKER_USERNAME/umu-bingo"
+    - export COMMIT="${TRAVIS_COMMIT::7}"
+    - export TAG=`if [ "${TRAVIS_BRANCH}" == "master" ]; then echo "latest"; else
+      echo "${TRAVIS_BRANCH}" ; fi`
+    - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+    - docker build -t "${IMAGE}:${COMMIT}" .
+    - docker tag "${IMAGE}:${COMMIT}" "${IMAGE}:${TAG}"
+    - docker push "${IMAGE}:$TAG"
+env:
+  global:
+  - secure: NAhcM80x0qtne8q+2wm8pQZZW9zPJVvrSeEdUWsBrQAZWRzMJM6heSfaXcDANvjfPjhRrw9tzpcyJT7hBOjgEi3DnBdd90yzyMyEXt+oOLNrmLFr7NteNhImpqkJRO1ZqLekICad8P2bsvAM6UVZUZBfDDHfULExoyglBCyc8DvjPgODcAqGcN+AzQKg7QaDfD5jUXzSUsQ8IT8ACadrVquML/CcrtmvCYeiXrCJ8O77hFZRLnYJ6k8w9/1k0hb30Y+ypJJzUEqLxkaQkV2kxB03sAmdx4pjlUMbtDrFKyGAQ4A2Hr6KMlKDBTyfhxJ0GWej2r+VjRVVHT3N+w2oBkZpEuFSspP6gF1FPayapk5ZwK3gOpCYpJk1rmeOCDI1th+c5S2vCEZRKleFWM8khbwyPnEpb8xylCz9sGSkjGL0XGr2z5McPye6OZ64a9l6Shke6VlGoTbXfsUXy1QENaKfF+piORxQdCTu8OWgQ4KYIFCtlurhG5cILNKZMhqwhejWwqj4ivKIQQtwjSYP96LaEvSkHHaBTo/90eDIdL7KJYDLBJEzbfOaGMN6SeXtwt4CuY9nmF/NUme337L6XvdvdAbDm7irwLAeUoBSPm6lIULebBWtMaeY9kmyTX01dT98+SaMcuycyqjSZxh6reNaTKWZy9qHb9KJytcnPUY=
+  - secure: T0dJwKfmA/cBM2Mg8G5AbBWB+I35kG1aWhjPiRjok5cnYIoo6rYjcKqJQu8lOySITW8GN+bYCp1no5yvx96/xlz2apaMKVKh7n8dkN8sn3+mc46qQgufe94CP4yH8JYQrc8VrTxepAGs7msUf6/UAKHUs5h2kjQiQC2TSbntrBCS0/4OOlvBdw0A3+V0CUtGUKmznN/01QFOuvSXRm2nNAi6LQtrr/XMvc32A2duVe1NLKYlUwUxiZQpBGqPsSwiSdXSPyQVRVEu2JUM034ppoY0O4qY6Ed56Iw/2TCGcFI4FLedkxJqS3zBN6VzcQwOSqlanHh9c2Fjr6ZqLhp3412Hk5HBNnctTeArWTaFi9QYS0UBFW7D3m0y/U3bKf2/nx5O0xB8Gc9yPYyRdRnEUT0cBlHMHSF5gqEWZ3c0sHIzJ22ijK00NBSoDvnD2D8PY+oMfAXH2zeIlY4Qo6ww44BAXu5aM488OwVabIQIdjL9R5TC2ESNnV+58wwlRHJ6igufpm0G11D0d3x0nEsiiW0a/v/5cMpWSk4tG8dYxZ/StmGqXigAfUyUbQF4RCHD/sozMjezN7qFm8FnwkQxnO7ge23G0YC1HDrf3NZi2LF+VDbqrntWU4oKQQpTwSDARiIQsE3PQGO/kcWCsAdpcCyv3ei/IrNmtxqdO+7Akpo=
