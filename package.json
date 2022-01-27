@@ -5,8 +5,8 @@
     "express": "^4.17.2"
   },
   "scripts": {
-    "build": "docker build . -t umubingo/umu-bingo",
+    "build": "docker build . -t umubingo/umu-bingo:dev",
     "server": "docker run -it --rm -p 8080:5000 umubingo/umu-bingo",
-    "publish": "docker image push umubingo/umu-bingo:latest"
+    "publish": "docker image push umubingo/umu-bingo:dev"
   }
 }
