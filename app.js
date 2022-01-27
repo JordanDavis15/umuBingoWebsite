@@ -14,14 +14,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //serve static resources
 //app.use(bodyParser.urlencoded({extended: false})); app.use(express.static(path.join(__dirname, '/public')));
-app.use("/public", express.static('./public'));
+app.use('/public', express.static('./public'));
 
 //routes
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '/login.html'));
 });
 
-app.post("/", function(req, res) {
+app.post('/', function(req, res) {
     var body = req.body;
     console.log(body);  
 
@@ -30,16 +30,20 @@ app.post("/", function(req, res) {
     }
     
     if(body.SOLaddr != undefined){ //this is how to test if post was a certain object
-        console.log("SOL address entered = " + body.SOLaddr); //access the value of the json like this
+        console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
         res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
         res.sendFile(path.join(__dirname, '/index.html'));
     }
     else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
-        console.log("Current user: " + req.cookies.userid);
+        console.log('Current user: ' + req.cookies.userid);
     }
     
+    if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
+        console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
+    }
 
-    //res.send("post recieved");
+
+    //res.send('post recieved');
   });
 
 
