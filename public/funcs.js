@@ -5,32 +5,10 @@ function myFunction(){
     document.getElementById(this.id).innerHTML = 'Clicked';
 }  
 
-var btnArr = [];
-function createBoardButtons(){
-    console.log('creating board buttons');
-    for(i = 0; i < 5; i++){
-        btnArr[i] = new Array();
-        for(j = 0; j < 5; j++){
-            btnArr[i][j]= document.createElement('button');
-            btnArr[i][j].id = 'b' + i + j;
-            btnArr[i][j].name = btnArr[i][j].id+'TEST'; //this is the value recieved in the post req
-            btnArr[i][j].textContent = btnArr[i][j].name = btnArr[i][j].id+'TEXTtest';;
-            btnArr[i][j].addEventListener('click', myFunction);
-           // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
-            //console.log(btnArr[i][j].onclick)
-        }
-    }
-
-    for(i = 0; i < btnArr.length; i++){
-        for(j = 0; j < btnArr[i].length; j++){
-            document.getElementById('d' + i).className = 'btn-group-board'
-            document.getElementById('d' + i).appendChild(btnArr[i][j]);
-        }
-    }
-}
-
 function createTable(){
     console.log('creating board table');
+    var currIndex = 0;
+    var btnArr = [];
     for(i = 0; i < 5; i++){
         btnArr[i] = new Array();
         var tabRow = document.createElement('tr')
@@ -38,18 +16,18 @@ function createTable(){
         document.getElementById('boardTable').appendChild(tabRow);
         for(j = 0; j < 5; j++){
             btnArr[i][j]= document.createElement('td');
-            btnArr[i][j].id = 'td' + i + j;
-            btnArr[i][j].name = btnArr[i][j].id+'TEST'; //this is the value recieved in the post req
-            btnArr[i][j].textContent = btnArr[i][j].name = btnArr[i][j].id+'TEXTtest';;
+            btnArr[i][j].id = 'td' + currIndex;
+            btnArr[i][j].name = btnArr[i][j].id; //this is the value recieved in the post req
+            btnArr[i][j].textContent = "any answer" + i + j;
             
             btnArr[i][j].addEventListener('click', testPost);
            // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
             //console.log(btnArr[i][j].onclick)
             
             document.getElementById('tr' + i).appendChild(btnArr[i][j]);
-            document.getElementById('td' + i + j).className = 'tableData';
+            document.getElementById('td' + currIndex).className = 'tableData';
             document.getElementById('tr' + i).className = 'tableDataGroups';
-            
+            currIndex++;
         }
         
     }
@@ -57,8 +35,6 @@ function createTable(){
 
 function testPost(){
     var tmpSel = {'selected': this.name};
- 
-    this.innerHTML='X';
     var buttonList = document.querySelectorAll('.tableData');   //buttonList is type NodeList
     var btnsArr = Array.prototype.slice.call(buttonList);       //converts NodeList into Array so values can be added to array
     btnsArr.push(tmpSel);
@@ -68,7 +44,75 @@ function testPost(){
         headers: {'Content-Type': 'application/json'}, 
         body: JSON.stringify(btnsArr)
         
-      }).then(res => {
+    })/*.then(res => {
         console.log('Request complete! response:', res);
-      });
+        console.log("=====");
+        console.log(res.body.toString());
+      });*/
+    .then(res => res.json())
+    .then(data => boardProcessing(data));
+}
+
+function boardProcessing(boardRes){
+    console.log('Data recieved from server = ');
+    console.log(boardRes[boardRes.length - 3].selected); //gets last selected answer
+    console.log(boardRes[boardRes.length - 2].correctness); //gets correctness of answer
+
+    //if incorrect do not mark a space
+    if(boardRes[boardRes.length - 2].correctness != 'X'){
+        //insert logic to notify user that answer was incorrect
+        console.log('incorrect');
+    }
+    else{
+        console.log('correct answer, updating table...');
+        updateDisplayBoard(boardRes);
+    }
+}
+
+//this is only called if selected answer is correct
+function updateDisplayBoard(boardInfo){
+    var currentTdToProcess = null;
+    var selected = boardInfo[boardInfo.length-3].selected;
+    var previousAnswers = Array();
+    var newBoard = Array();
+
+    //remove all table date
+    for(i = 0; i < 25; i++){
+        currentTdToProcess = boardInfo[i];
+        console.log(currentTdToProcess);
+        previousAnswers.push(document.getElementById(currentTdToProcess.name).textContent);
+        //currentTdToProcess.parentNode.removeChild(currentTdToProcess);
+        document.getElementById(currentTdToProcess.name).outerHTML = "";
+        console.log('removed all table data since selection was correct');
+    }
+
+    //repopulate table data into newBoard Array
+    for(i = 0; i < 25; i++){
+        //create new td and set same attributes as before post res was recieved, except for changing correct answer td to be different
+        currentTdToProcess = document.createElement('td');
+        currentTdToProcess.id = 'td' + i;
+        currentTdToProcess.name = currentTdToProcess.id; //this is the value recieved in the post req    
+        currentTdToProcess.addEventListener('click', testPost);
+        console.log(currentTdToProcess.name + '|||||||' + selected);
+        if(currentTdToProcess.name == selected){
+            currentTdToProcess.textContent = 'X'; //mark selected as correct
+            newBoard.push(currentTdToProcess);
+        }
+        else{
+            currentTdToProcess.textContent = previousAnswers[i];
+            newBoard.push(currentTdToProcess);
+        }
+    }
+
+    //add new table board to screen
+    var currIndex = 0;
+    for(i = 0; i < 5; i++){
+        for(j = 0; j < 5; j++){
+            console.log(newBoard[currIndex]);
+            document.getElementById('tr' + i).appendChild(newBoard[currIndex]);
+            document.getElementById('td' + currIndex).className = 'tableData';
+            currIndex++;
+        }
+    }
+    console.log('board has been updated!');
 }

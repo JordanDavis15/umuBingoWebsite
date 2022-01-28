@@ -37,9 +37,20 @@ app.post('/', function(req, res) {
     else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
         console.log('Current user: ' + req.cookies.userid);
     }
-    
+
+
     if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
         console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
+
+        //insert logic to determine correctness here
+        //below is sample setting of correctness
+        body.push({'correctness': ' '}) //'X' denotes correct, ' ' denotes incorrect
+
+        //insert logic to determine bingo achieved here
+        //below is sample setting of gameOver
+        body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
+
+        res.send(JSON.stringify(req.body));
     }
 
 
