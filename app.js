@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({extended: false})); app.use(express.static(path.join(__dirname, '/public')));
 app.use('/public', express.static('./public'));
 
+
 //routes
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '/login.html'));
@@ -39,12 +40,12 @@ app.post('/', function(req, res) {
     }
 
 
-    if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
+    if(body[body.length-3] != undefined){ // will get selected value if post req has a selected value
         console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
 
         //insert logic to determine correctness here
         //below is sample setting of correctness
-        body.push({'correctness': ' '}) //'X' denotes correct, ' ' denotes incorrect
+        body.push({'correctness': 'X'}) //'X' denotes correct, ' ' denotes incorrect
 
         //insert logic to determine bingo achieved here
         //below is sample setting of gameOver
