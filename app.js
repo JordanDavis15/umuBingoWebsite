@@ -36,7 +36,14 @@ app.post('/', function(req, res) {
         res.sendFile(path.join(__dirname, '/index.html'));
     }
     else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
+        console.log('=====NEW Logged-in Post Req=====')
         console.log('Current user: ' + req.cookies.userid);
+    }
+
+    //see if user made selection of category
+    if(body.category != undefined){
+        console.log('category selection = ' + body.category);
+        res.send(JSON.stringify({'hideSelection' : 'X'}));
     }
 
 

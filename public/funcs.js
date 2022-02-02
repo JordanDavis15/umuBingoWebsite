@@ -20,7 +20,7 @@ function createTable(){
             btnArr[i][j].name = btnArr[i][j].id; //this is the value recieved in the post req
             btnArr[i][j].textContent = "any answer" + i + j;
             
-            btnArr[i][j].addEventListener('click', testPost);
+            btnArr[i][j].addEventListener('click', tableSelPost);
            // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
             //console.log(btnArr[i][j].onclick)
             
@@ -31,9 +31,23 @@ function createTable(){
         }
         
     }
+
+    //logic to create selection menu, had to put here since only 1 onload event per html page
+    console.log('create cat called');
+    for(i = 0; i < 4; i++){
+        cat = document.createElement('option');
+        cat.id = 'op' + i;
+        cat.name = cat.id; //this is the value recieved in the post req  
+        cat.value = cat.name;
+        cat.textContent = cat.value;
+        cat.addEventListener('click', catSelection);
+        document.getElementById('cats').appendChild(cat);
+        console.log(cat.value);
+    }
+
 }
 
-function testPost(){
+function tableSelPost(){
     var tmpSel = {'selected': this.name};
     var buttonList = document.querySelectorAll('.tableData');   //buttonList is type NodeList
     var btnsArr = Array.prototype.slice.call(buttonList);       //converts NodeList into Array so values can be added to array
@@ -92,7 +106,7 @@ function updateDisplayBoard(boardInfo){
         currentTdToProcess = document.createElement('td');
         currentTdToProcess.id = 'td' + i;
         currentTdToProcess.name = currentTdToProcess.id; //this is the value recieved in the post req    
-        currentTdToProcess.addEventListener('click', testPost);
+        currentTdToProcess.addEventListener('click', tableSelPost);
         console.log(currentTdToProcess.name + '|||||||' + selected);
         if(currentTdToProcess.name == selected){
             currentTdToProcess.textContent = 'X'; //mark selected as correct
@@ -115,4 +129,27 @@ function updateDisplayBoard(boardInfo){
         }
     }
     console.log('board has been updated!');
+}
+
+
+function catSelection(){
+    var tmpSel = {'category': document.getElementById('cats').value};
+    fetch('/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(tmpSel)
+        
+    })
+    .then(res => res.json())
+    .then(data => hideSelectionInfo(data));
+}
+
+function hideSelectionInfo(data){
+    console.log('attempting to hide selection info');
+    console.log(data);
+    if(data.hideSelection == 'X'){
+        document.getElementById('selLabel').outerHTML = "";
+        document.getElementById('cats').outerHTML = "";
+        document.getElementById('selButton').outerHTML = "";
+    }
 }

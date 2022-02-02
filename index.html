@@ -95,7 +95,20 @@
     </body>
     
     
-    <body class=btn-login>
+    <!--body class=btn-login>
         <a href='/login'><button>Login</button></a>
+    </body-->
+    
+    <!-- body to hold selection data for bingo category-->
+    <body> <!-- gets populated from createTable onload event above-->
+            <label id="selLabel" for="cats">Choose a Bingo category:</label>
+            <select name="cats" id="cats">
+
+            </select>
+            <br><br>
+            <div class='btn-login'>
+                <button id="selButton" onclick="catSelection()">Start!</button>
+            </div>
     </body>
+
 </html>
