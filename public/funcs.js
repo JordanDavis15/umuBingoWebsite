@@ -29,22 +29,7 @@ function createTable(){
             document.getElementById('tr' + i).className = 'tableDataGroups';
             currIndex++;
         }
-        
     }
-
-    //logic to create selection menu, had to put here since only 1 onload event per html page
-    console.log('create cat called');
-    for(i = 0; i < 4; i++){
-        cat = document.createElement('option');
-        cat.id = 'op' + i;
-        cat.name = cat.id; //this is the value recieved in the post req  
-        cat.value = cat.name;
-        cat.textContent = cat.value;
-        cat.addEventListener('click', catSelection);
-        document.getElementById('cats').appendChild(cat);
-        console.log(cat.value);
-    }
-
 }
 
 function tableSelPost(){
