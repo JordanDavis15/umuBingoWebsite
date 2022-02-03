@@ -53,7 +53,7 @@ function tableSelPost(){
     var btnsArr = Array.prototype.slice.call(buttonList);       //converts NodeList into Array so values can be added to array
     btnsArr.push(tmpSel);
     console.log('Button data from screen: ' + buttonList.toString());
-    fetch('/', {
+    fetch('/main', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}, 
         body: JSON.stringify(btnsArr)
@@ -132,24 +132,24 @@ function updateDisplayBoard(boardInfo){
 }
 
 
-function catSelection(){
-    var tmpSel = {'category': document.getElementById('cats').value};
-    fetch('/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify(tmpSel)
+// function catSelection(){
+//     var tmpSel = {'category': document.getElementById('cats').value};
+//     fetch('/category', {
+//         method: 'POST',
+//         headers: {'Content-Type': 'application/json'}, 
+//         body: JSON.stringify(tmpSel)
         
-    })
-    .then(res => res.json())
-    .then(data => hideSelectionInfo(data));
-}
+//     })
+//     .then(res => res.json())
+//     .then(data => hideSelectionInfo(data));
+// }
 
-function hideSelectionInfo(data){
-    console.log('attempting to hide selection info');
-    console.log(data);
-    if(data.hideSelection == 'X'){
-        document.getElementById('selLabel').outerHTML = "";
-        document.getElementById('cats').outerHTML = "";
-        document.getElementById('selButton').outerHTML = "";
-    }
-}
+// function hideSelectionInfo(data){
+//     console.log('attempting to hide selection info');
+//     console.log(data);
+//     if(data.hideSelection == 'X'){
+//         document.getElementById('selLabel').outerHTML = "";
+//         document.getElementById('cats').outerHTML = "";
+//         document.getElementById('selButton').outerHTML = "";
+//     }
+// }

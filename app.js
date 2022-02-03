@@ -17,12 +17,47 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/public', express.static('./public'));
 
 
-//routes
+/************************/
+/*routes                */
+/************************/
+
+//route to login page
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '/login.html'));
 });
 
-app.post('/', function(req, res) {
+//route to Login Page (alternate)
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
+  });
+
+  //route to Login Page (alternate)
+app.get('/index', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+  });
+
+//logic to handle post reqs from category.html
+app.post('/category', function(req, res) {
+    var selectedOption = req.body.selected;
+    if(selectedOption != 'get-categories'){
+        console.log('category selected = ' + selectedOption);
+        res.cookie('category', selectedOption);
+        res.send(JSON.stringify('good'));
+    }
+    else{
+        //insert logic to determine categories here
+        //below is sample sending categories
+        var cats = []
+        for(i = 0; i < 6; i++){
+            cats.push('Category' + i);
+        }
+        res.send(JSON.stringify(cats));
+    }
+
+  });
+
+//logic to handle post reqs from index.html and login.html
+app.post('/main', function(req, res) {
     var body = req.body;
     console.log(body);  
 
@@ -30,22 +65,21 @@ app.post('/', function(req, res) {
         res.sendFile(path.join(__dirname, '/login.html'));
     }
     
-    if(body.SOLaddr != undefined){ //this is how to test if post was a certain object
+    if(body.SOLaddr != undefined && req.cookies.category == undefined){ //&& req.cookies.category == undefined){                    //check to see if user has selected a category yet
         console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
         res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
-        res.sendFile(path.join(__dirname, '/index.html'));
+        res.sendFile(path.join(__dirname, '/category.html'));
     }
     else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
         console.log('=====NEW Logged-in Post Req=====')
         console.log('Current user: ' + req.cookies.userid);
-    }
 
-    //see if user made selection of category
-    if(body.category != undefined){
-        console.log('category selection = ' + body.category);
-        res.send(JSON.stringify({'hideSelection' : 'X'}));
     }
-
+    if(req.cookies.category != undefined){
+        console.log('attempting to send index.html');
+        
+        res.sendFile(path.join(__dirname, '/index.html'));
+    }
 
     if(body[body.length-3] != undefined){ // will get selected value if post req has a selected value
         console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
@@ -65,11 +99,6 @@ app.post('/', function(req, res) {
     //res.send('post recieved');
   });
 
-
-// Route to Login Page
-app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/login.html');
-  });
 
 /*
 app.post('/submit-data', function (req, res) {
