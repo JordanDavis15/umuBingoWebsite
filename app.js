@@ -23,6 +23,16 @@ app.use('/public', express.static('./public'));
 
 //route to login page
 app.get('/', function (req, res) {
+    //clear all cookies if they exist
+    var cookies = req.cookies;
+    if(req.cookies != undefined){
+        console.log('clearing cookies');
+        for (var key of Object.keys(cookies)) {
+            console.log("clearing cookie: " + key); // + " -> " + cookies[key])
+            res.clearCookie(key);
+        }
+    }
+    //send login page
     res.sendFile(path.join(__dirname, '/login.html'));
 });
 
@@ -59,7 +69,7 @@ app.post('/category', function(req, res) {
 //logic to handle post reqs from index.html and login.html
 app.post('/main', function(req, res) {
     var body = req.body;
-    console.log(body);  
+    console.log(body); 
 
     if(body.SOLaddr == undefined){
         res.sendFile(path.join(__dirname, '/login.html'));
