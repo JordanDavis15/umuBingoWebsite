@@ -5,96 +5,6 @@
     background: #a200ff;
     color: white;
     font-size: 30px;
-  }
-
-  /*.button {
-    border-radius: 30px;
-    background-color: rgb(195, 0, 255);
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 0 auto;
-    display: block;
-  }*/
-
-/******************************************/
-/*button group for BINGO buttons 1/13/2022*/
-/******************************************/
-  .btn-group-header button {
-    background-color: rgb(174, 4, 253);
-    border: 1px solid rgb(174, 4, 253);
-    color: white; /*text color*/
-    padding: 10px 24px; /*padding*/
-    cursor: pointer; /*Pointer icon*/
-    float: left; /*Float the buttons side by side */
-    height: 75px;
-    width: 175px;
-    margin-bottom: 5px;
-    margin-top: 10px
-  }
-  
-  /* Clear floats (clearfix hack) */
-  .btn-group-header:after {
-    content: "";
-    clear: both;
-    display: table;
-  }
-  
-  .btn-group-header button:not(:last-child) {
-    border-right: none; /* Prevent double borders */
-  }
-  
-  /*END OF BUTTON GROUP BINGO*/
-
-
-/******************************************/
-/*button group for board buttons 1/13/2022*/
-/******************************************/
-.btn-group-board button {
-  background-color: rgb(203, 4, 253);
-  border: 1px solid rgb(203, 4, 253);
-  color: white; /*text color*/
-  padding: 10px 24px; /*padding*/
-  cursor: pointer; /*Pointer icon*/
-  float: left; /*Float the buttons side by side */
-  height: 75px;
-  width: 175px;
-  margin-bottom: 2px;
-}
-
-/* Clear floats (clearfix hack) */
-.btn-group-board:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.btn-group-board button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
-}
-
-/* Add a background color on hover */
-.btn-group-board button:hover {
-  background-color: rgb(114, 5, 165);
-}
-
-/********Login button 1/23/22*/
-.btn-login button{
-  background-color: #00ff4c;
-  border-radius: 30px;
-  color: white;
-  top: 40px;
-  right: 70px;
-  height: 75px;
-  width: 175px;
-}
-
-/* Add a background color on hover */
-.btn-login button:hover {
-  background-color: rgb(114, 5, 165);
 }
 
 table{
@@ -105,17 +15,23 @@ table, th, td {
   border: 1px solid #ffffff;
   border-collapse: collapse;
 }
-.tableHeader th {
-  background-color: #8100cc;
+th, td{
+  width: 15%;
+}
+
+th {
+  background-color: #7101b3;
+  color: #ffffff;
   border-radius: 10px;
   height: 3em;
   text-align: center;
+  font-size: x-large;
 }
 .tableData td{
   background-color: #a200ff;
 
   border-radius: 10px;
-  height: 3em;
+  height: 4em;
   text-align: center;
 }
 
@@ -123,7 +39,7 @@ table, th, td {
   background-color: #a200ff;
   color: #ffffff;
   border-radius: 10px;
-  height: 3em;
+  height: 5em;
   text-align: center;
 }
 .tableDataGroups td:hover{
