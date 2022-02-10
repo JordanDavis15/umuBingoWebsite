@@ -1,0 +1,47 @@
+.header {
+    border-radius: 25px;
+    padding: 60px;
+    text-align: center;
+    background: #a200ff;
+    color: white;
+    font-size: 30px;
+}
+
+table{
+  width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table, th, td {
+    border: 1px solid #ffffff;
+    border-collapse: collapse;
+  }
+th, td{
+    width: 15%;
+  }
+  
+th {
+    background-color: #7101b3;
+    color: #ffffff;
+    border-radius: 10px;
+    height: 3em;
+    text-align: center;
+    font-size: x-large;
+  }
+.tableData td{
+    background-color: #a200ff;
+    border-radius: 10px;
+    height: 4em;
+    text-align: center;
+ }
+.tableDataGroups td{
+    background-color: #a200ff;
+    color: #ffffff;
+    border-radius: 10px;
+    height: 5em;
+    text-align: center;
+  }
+  .tableDataGroups td:hover{
+    background-color: #8100cc;
+  }

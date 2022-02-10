@@ -14,19 +14,25 @@
   <main id="main-holder">
     <h1 id="login-header">UMU Bingo Login</h1>
 
-    <video autoplay muted loop width="400" height="300">
-      <source src="/public/AnimationOfCoin720p.mp4" type="video/mp4" />
-    </video>
+    <div class="divFormat">
+      <video autoplay muted loop style="width: 100%; height: 100;">
+        <source src="/public/AnimationOfCoin720p.mp4" type="video/mp4" />
+      </video>
+    </div>
+
 
     
     <div id="login-error-msg-holder">
       <p id="login-error-msg">Invalid SOL address <span id="error-msg-second-line">and/or password</span></p>
     </div>
     
-    <form id="login-form" action="/main" method="POST">
-      <input type="text" name="SOLaddr"  class="login-form-field" placeholder="SOL wallet Address">
-      <input type="submit" value="Login" id="login-form-submit">
-    </form>
+
+    <div class="divFormat">
+      <form id="login-form" action="/main" method="POST">
+        <input type="text" name="SOLaddr"  class="login-form-field" placeholder="SOL wallet Address">
+        <input type="submit" value="Login" id="login-form-submit">
+      </form>
+    </div>
   
   </main>
 </body>

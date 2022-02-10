@@ -9,12 +9,13 @@
 
 table{
   width: 65%;
-  
 }
+
 table, th, td {
   border: 1px solid #ffffff;
   border-collapse: collapse;
 }
+
 th, td{
   width: 15%;
 }
@@ -29,7 +30,6 @@ th {
 }
 .tableData td{
   background-color: #a200ff;
-
   border-radius: 10px;
   height: 4em;
   text-align: center;
