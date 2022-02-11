@@ -31,15 +31,6 @@ fs.readFile(path.join(__dirname, '/dbinfo.txt'), 'utf8' , (err, data) => {
   });
 });
 
-
-// const pool = new Pool({
-//     user: ***REMOVED***,
-//     host: '***REMOVED***',
-//     database: ***REMOVED***,
-//     password: '***REMOVED***',
-//     port: '***REMOVED***',
-//   })
-
 //app.use(bodyParser.urlencoded({ extended: false }))
 //app.use(bodyParser.json())
 
