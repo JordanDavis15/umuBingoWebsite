@@ -1,9 +1,35 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
+
 const path = require('path');
 const bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+const { Pool } = require('pg')
+const fs = require('fs')
+
 var app = express();
+var loginInfo = Array();
+var pool = null; //set pool to null until init
+
 app.use(cookieParser());
+
+fs.readFile(path.join(__dirname, '/dbinfo.txt'), 'utf8' , (err, data) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  loginInfo = data.split('\n'); //split data based on new line
+  for(i = 0; i < loginInfo.length; i++){
+    loginInfo[i] = loginInfo[i].replace('\r', '');   //remove carriage return char if exists
+  }
+  console.log(loginInfo[0]);
+  pool = new Pool({
+  user: loginInfo[0],
+    host: loginInfo[1],
+    database: loginInfo[2],
+    password: String(loginInfo[3]),
+    port: loginInfo[4],
+  });
+});
 
 //app.use(bodyParser.urlencoded({ extended: false }))
 //app.use(bodyParser.json())
@@ -32,6 +58,8 @@ app.get('/', function (req, res) {
             res.clearCookie(key);
         }
     }
+    //test database connection
+    testDBAccess();
     //send login page
     res.sendFile(path.join(__dirname, '/login.html'));
 });
@@ -116,11 +144,9 @@ app.post('/submit-data', function (req, res) {
     
     res.send(name + ' Submitted Successfully!');
 });
-
 app.put('/update-data', function (req, res) {
     res.send('PUT Request');
 });
-
 app.delete('/delete-data', function (req, res) {
     res.send('DELETE Request');
 });*/
@@ -128,3 +154,16 @@ app.delete('/delete-data', function (req, res) {
 var server = app.listen(5000, function () {
     console.log('Node server is running..');
 });
+
+async function testDBAccess(){
+    await pool.query('SELECT * from user', (err, res) => {
+        if(err){
+            //do something
+            console.log(err)
+        }
+        else{
+            console.log(res.rows);
+            //pool.end()
+        }
+    });
+}
