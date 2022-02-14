@@ -21,7 +21,7 @@ function createTable(){
             btnArr[i][j].textContent = "any answer" + i + j;
             
             btnArr[i][j].addEventListener('click', tableSelPost);
-           // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
+            // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
             //console.log(btnArr[i][j].onclick)
             
             document.getElementById('tr' + i).appendChild(btnArr[i][j]);
