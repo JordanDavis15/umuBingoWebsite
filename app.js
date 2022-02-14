@@ -85,11 +85,26 @@ app.post('/category', function(req, res) {
     else{
         //insert logic to determine categories here
         //below is sample sending categories
-        var cats = []
-        for(i = 0; i < 6; i++){
-            cats.push('Category' + i);
-        }
-        res.send(JSON.stringify(cats));
+        //getCategoriesFromDB();
+        //cats = [];
+        console.log("test=====>");
+        
+        //console.log(getCategoriesFromDB().then((value) => console.log(value)));
+
+        //self calling async function to gather data from getCategoriesFromDB async call
+        (async () => {
+            console.log('requested database data')
+            var cats = await getCategoriesFromDB();
+            console.log(cats);
+            res.send(JSON.stringify(cats));
+        })();
+        
+        //cats = getCategoriesFromDB().then(value => console.log(value));
+        //console.log(cats);
+        // for(i = 0; i < 6; i++){
+        //     cats.push('Category' + i);
+        // }
+        //res.send(JSON.stringify(cats));
     }
 
   });
@@ -152,18 +167,48 @@ app.delete('/delete-data', function (req, res) {
 });*/
 
 var server = app.listen(5000, function () {
-    console.log('Node server is running..');
+    console.log('Node server is running...');
 });
 
 async function testDBAccess(){
-    await pool.query('SELECT * from question', (err, res) => {
-        if(err){
-            //do something
-            console.log(err)
-        }
-        else{
-            console.log(res.rows);
-            //pool.end()
-        }
-    });
+    // await pool.query('SELECT * from question', (err, res) => {
+    //     if(err){
+    //         //do something
+    //         console.log(err)
+    //     }
+    //     else{
+    //         console.log(res.rows);
+    //         //pool.end()
+    //     }
+    // });
 }
+
+// async function getCategoriesFromDB(){
+//     cat = null;
+//      pool.query('SELECT DISTINCT category from question', (err, res) => {
+//         if(err){
+//             //do something
+//             console.log(err)
+//             return err;
+//         }
+//         else{
+//             console.log(res.rows);
+//             cat = res.rows;
+//             console.log('test2');
+//             console.log(cat);
+//             return res;
+//             //pool.end()
+//         }
+//     });
+//     //return cat;
+// }
+
+async function getCategoriesFromDB() {
+    var results = await pool.query("SELECT DISTINCT category from question");
+    var cats = [];
+    for(i = 0; i < results.rows.length; i++){
+        cats.push(results.rows[i].category);
+    }
+    return cats;
+  }
+
