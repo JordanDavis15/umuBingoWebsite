@@ -23,7 +23,7 @@ fs.readFile(path.join(__dirname, '/dbinfo.txt'), 'utf8' , (err, data) => {
   }
   console.log(loginInfo[0]);
   pool = new Pool({
-  user: loginInfo[0],
+    user: loginInfo[0],
     host: loginInfo[1],
     database: loginInfo[2],
     password: String(loginInfo[3]),
@@ -156,7 +156,7 @@ var server = app.listen(5000, function () {
 });
 
 async function testDBAccess(){
-    await pool.query('SELECT * from user', (err, res) => {
+    await pool.query('SELECT * from question', (err, res) => {
         if(err){
             //do something
             console.log(err)
