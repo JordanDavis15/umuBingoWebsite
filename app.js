@@ -9,27 +9,47 @@ const fs = require('fs')
 var app = express();
 var loginInfo = Array();
 var pool = null; //set pool to null until init
+var time = new Date();
 
 app.use(cookieParser());
 
-fs.readFile(path.join(__dirname, '/dbinfo.txt'), 'utf8' , (err, data) => {
-  if (err) {
-    console.error(err)
-    return
-  }
-  loginInfo = data.split('\n'); //split data based on new line
-  for(i = 0; i < loginInfo.length; i++){
-    loginInfo[i] = loginInfo[i].replace('\r', '');   //remove carriage return char if exists
-  }
-  console.log(loginInfo[0]);
-  pool = new Pool({
-    user: loginInfo[0],
-    host: loginInfo[1],
-    database: loginInfo[2],
-    password: String(loginInfo[3]),
-    port: loginInfo[4],
-  });
-});
+try{
+    //test to see if env vars can be used
+    if (process.env.POSTGRES_USER == undefined || process.env.POSTGRES_HOST == undefined ||
+        process.env.POSTGRES_DB == undefined || process.env.POSTGRES_PASSWORD == undefined ||
+        process.env.POSTGRES_DEV_PORT == undefined){
+        throw error; //env vars cannot be used
+    }
+    pool = new Pool({
+        user: process.env.POSTGRES_USER,
+        host: process.env.POSTGRES_HOST,
+        database: process.env.POSTGRES_DB,
+        password: process.env.POSTGRES_PASSWORD,
+        port: process.env.POSTGRES_DEV_PORT,
+    });
+}
+catch{
+    console.log('No env vars found, reverting to dbinfo.txt file');
+    fs.readFile(path.join(__dirname, '/dbinfo.txt'), 'utf8' , (err, data) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        loginInfo = data.split('\n'); //split data based on new line
+        for(i = 0; i < loginInfo.length; i++){
+          loginInfo[i] = loginInfo[i].replace('\r', '');   //remove carriage return char if exists
+        }
+        console.log(loginInfo[0]);
+        pool = new Pool({
+          user: loginInfo[0],
+          host: loginInfo[1],
+          database: loginInfo[2],
+          password: String(loginInfo[3]),
+          port: loginInfo[4],
+        });
+      });
+}
+
 
 //app.use(bodyParser.urlencoded({ extended: false }))
 //app.use(bodyParser.json())
@@ -83,14 +103,6 @@ app.post('/category', function(req, res) {
         res.send(JSON.stringify('good'));
     }
     else{
-        //insert logic to determine categories here
-        //below is sample sending categories
-        //getCategoriesFromDB();
-        //cats = [];
-        console.log("test=====>");
-        
-        //console.log(getCategoriesFromDB().then((value) => console.log(value)));
-
         //self calling async function to gather data from getCategoriesFromDB async call
         (async () => {
             console.log('requested database data')
@@ -98,15 +110,7 @@ app.post('/category', function(req, res) {
             console.log(cats);
             res.send(JSON.stringify(cats));
         })();
-        
-        //cats = getCategoriesFromDB().then(value => console.log(value));
-        //console.log(cats);
-        // for(i = 0; i < 6; i++){
-        //     cats.push('Category' + i);
-        // }
-        //res.send(JSON.stringify(cats));
     }
-
   });
 
 //logic to handle post reqs from index.html and login.html
@@ -130,7 +134,7 @@ app.post('/main', function(req, res) {
     }
     if(req.cookies.category != undefined){
         console.log('attempting to send index.html');
-        
+        console.log(time.getTime() / 1000); // / by 1000 to get seconds
         res.sendFile(path.join(__dirname, '/index.html'));
     }
 
@@ -211,4 +215,8 @@ async function getCategoriesFromDB() {
     }
     return cats;
   }
+  
+function setAddrAndStartTimeOnDB(addr, time){
+    pool.query("INSERT ")
+}
 
