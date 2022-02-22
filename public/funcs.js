@@ -5,10 +5,11 @@ function myFunction(){
     document.getElementById(this.id).innerHTML = 'Clicked';
 }  
 
-function createTable(){
+function createTable(qAndAs){
     console.log('creating board table');
     var currIndex = 0;
     var btnArr = [];
+    console.log(qAndAs[0]);
     for(i = 0; i < 5; i++){
         btnArr[i] = new Array();
         var tabRow = document.createElement('tr')
@@ -30,6 +31,22 @@ function createTable(){
             currIndex++;
         }
     }
+}
+
+
+function getQuestionsAndAnswers(){
+    fetch('/getans', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify({'questionsAndAnswers':'get'})
+        
+    })/*.then(res => {
+        console.log('Request complete! response:', res);
+        console.log("=====");
+        console.log(res.body.toString());
+      });*/
+    .then(res => res.json())
+    .then(data => createTable(data));
 }
 
 function tableSelPost(){

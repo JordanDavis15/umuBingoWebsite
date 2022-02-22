@@ -78,8 +78,6 @@ app.get('/', function (req, res) {
             res.clearCookie(key);
         }
     }
-    //test database connection
-    testDBAccess();
     //send login page
     res.sendFile(path.join(__dirname, '/login.html'));
 });
@@ -156,6 +154,16 @@ app.post('/main', function(req, res) {
     //res.send('post recieved');
   });
 
+  app.post('/getans', function(req, res){
+      if(req.body.questionsAndAnswers == 'get'){
+        (async () => {
+            console.log('requested question and answer data')
+            var qAndAs = await getQuestionsAndAnswersFromDB(req.cookies.category);
+            res.send(JSON.stringify(qAndAs));
+        })();
+      }
+  });
+
 
 /*
 app.post('/submit-data', function (req, res) {
@@ -174,39 +182,7 @@ var server = app.listen(5000, function () {
     console.log('Node server is running...');
 });
 
-async function testDBAccess(){
-    // await pool.query('SELECT * from question', (err, res) => {
-    //     if(err){
-    //         //do something
-    //         console.log(err)
-    //     }
-    //     else{
-    //         console.log(res.rows);
-    //         //pool.end()
-    //     }
-    // });
-}
-
-// async function getCategoriesFromDB(){
-//     cat = null;
-//      pool.query('SELECT DISTINCT category from question', (err, res) => {
-//         if(err){
-//             //do something
-//             console.log(err)
-//             return err;
-//         }
-//         else{
-//             console.log(res.rows);
-//             cat = res.rows;
-//             console.log('test2');
-//             console.log(cat);
-//             return res;
-//             //pool.end()
-//         }
-//     });
-//     //return cat;
-// }
-
+//returns array of categories from database
 async function getCategoriesFromDB() {
     var results = await pool.query("SELECT DISTINCT category from question");
     var cats = [];
@@ -214,7 +190,19 @@ async function getCategoriesFromDB() {
         cats.push(results.rows[i].category);
     }
     return cats;
-  }
+}
+
+//returns array of questions and answers from database
+async function getQuestionsAndAnswersFromDB(cat) {
+    var results = await pool.query("SELECT DISTINCT text, answer from question where category = " + '\'' + cat + '\'');
+    var qAndAs = [];
+    for(i = 0; i < results.rows.length; i++){
+        //console.log(results.rows[i]);
+        qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
+    }
+    return qAndAs;
+}
+
   
 function setAddrAndStartTimeOnDB(addr, time){
     pool.query("INSERT ")
