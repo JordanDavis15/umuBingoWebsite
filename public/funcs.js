@@ -10,6 +10,9 @@ function createTable(qAndAs){
     var currIndex = 0;
     var btnArr = [];
     console.log(qAndAs[0]);
+    for(i = 0; i < qAndAs.length; i++){
+        qAndAs[i] = qAndAs[i].split('`');
+    }
     for(i = 0; i < 5; i++){
         btnArr[i] = new Array();
         var tabRow = document.createElement('tr')
@@ -19,7 +22,8 @@ function createTable(qAndAs){
             btnArr[i][j]= document.createElement('td');
             btnArr[i][j].id = 'td' + currIndex;
             btnArr[i][j].name = btnArr[i][j].id; //this is the value recieved in the post req
-            btnArr[i][j].textContent = "any answer" + i + j;
+            //btnArr[i][j].textContent = "any answer" + i + j;
+            btnArr[i][j].textContent = qAndAs[currIndex][1];
             
             btnArr[i][j].addEventListener('click', tableSelPost);
             // btnArr[i][j].addEventListener('click', myfunction(btnArr[i][j].id))
