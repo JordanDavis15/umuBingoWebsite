@@ -45,5 +45,16 @@ function tableSelPost(){
         
     })
     .then(res => res.json())
-    .then(data => location.reload());
+    // .then(data => location.reload());
+    .then(data => redir(data));
+}
+
+function redir(data){
+    console.log('inside redirect fetch');
+    if(data == 'good'){
+        location.replace("/index");
+    }
+    else{
+        location.replace("/login")
+    }
 }
