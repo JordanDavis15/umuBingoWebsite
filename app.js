@@ -195,10 +195,18 @@ async function getCategoriesFromDB() {
 //returns array of questions and answers from database
 async function getQuestionsAndAnswersFromDB(cat) {
     var results = await pool.query("SELECT DISTINCT text, answer from question where category = " + '\'' + cat + '\'');
+    var questions = [];
+    var answers = [];
     var qAndAs = [];
     for(i = 0; i < results.rows.length; i++){
         //console.log(results.rows[i]);
-        qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
+        questions.push(results.rows[i].text);
+        answers.push(results.rows[i].answer);
+        //qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
+    }
+    questions.sort(() => Math.random() - 0.5);
+    for(i = 0; i < questions.length; i++){
+        qAndAs.push(questions[i] + '`' + answers[i]); //using ` char as delimiter
     }
     return qAndAs;
 }
