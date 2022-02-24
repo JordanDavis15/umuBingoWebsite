@@ -21,8 +21,9 @@ function createTable(qAndAs){
         for(j = 0; j < 5; j++){
             btnArr[i][j]= document.createElement('td');
             btnArr[i][j].id = 'td' + currIndex;
-            btnArr[i][j].name = btnArr[i][j].id; //this is the value recieved in the post req
+            //btnArr[i][j].name = btnArr[i][j].id; //this is the value recieved in the post req
             //btnArr[i][j].textContent = "any answer" + i + j;
+            btnArr[i][j].name = qAndAs[currIndex][1];
             btnArr[i][j].textContent = qAndAs[currIndex][1];
             
             btnArr[i][j].addEventListener('click', tableSelPost);
@@ -35,6 +36,7 @@ function createTable(qAndAs){
             currIndex++;
         }
     }
+    document.getElementById('questionbox').textContent = qAndAs[0][0];
 }
 
 
@@ -54,9 +56,11 @@ function getQuestionsAndAnswers(){
 }
 
 function tableSelPost(){
+    var currQuestion = {'question': document.getElementById('questionbox').innerHTML};
     var tmpSel = {'selected': this.name};
     var buttonList = document.querySelectorAll('.tableData');   //buttonList is type NodeList
     var btnsArr = Array.prototype.slice.call(buttonList);       //converts NodeList into Array so values can be added to array
+    btnsArr.push(currQuestion);
     btnsArr.push(tmpSel);
     console.log('Button data from screen: ' + buttonList.toString());
     fetch('/main', {
@@ -100,9 +104,10 @@ function updateDisplayBoard(boardInfo){
     for(i = 0; i < 25; i++){
         currentTdToProcess = boardInfo[i];
         console.log(currentTdToProcess);
-        previousAnswers.push(document.getElementById(currentTdToProcess.name).textContent);
+        console.log(currentTdToProcess.name);
+        previousAnswers.push(document.getElementById('td' + i).textContent);
         //currentTdToProcess.parentNode.removeChild(currentTdToProcess);
-        document.getElementById(currentTdToProcess.name).outerHTML = "";
+        document.getElementById('td' + i).outerHTML = "";
         console.log('removed all table data since selection was correct');
     }
 
@@ -111,14 +116,18 @@ function updateDisplayBoard(boardInfo){
         //create new td and set same attributes as before post res was recieved, except for changing correct answer td to be different
         currentTdToProcess = document.createElement('td');
         currentTdToProcess.id = 'td' + i;
-        currentTdToProcess.name = currentTdToProcess.id; //this is the value recieved in the post req    
+        currentTdToProcess.name = previousAnswers[i];
+           
         currentTdToProcess.addEventListener('click', tableSelPost);
-        console.log(currentTdToProcess.name + '|||||||' + selected);
+        console.log(currentTdToProcess.textContent);
+        console.log(currentTdToProcess.textContent + '|||||||' + selected);
         if(currentTdToProcess.name == selected){
-            currentTdToProcess.textContent = 'X'; //mark selected as correct
+            currentTdToProcess.name = 'X';  //this is the value recieved in the post req
+            currentTdToProcess.textContent = 'X'; //mark selected as correct 
             newBoard.push(currentTdToProcess);
         }
         else{
+            currentTdToProcess.name = previousAnswers[i];  //this is the value recieved in the post req 
             currentTdToProcess.textContent = previousAnswers[i];
             newBoard.push(currentTdToProcess);
         }
