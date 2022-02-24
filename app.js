@@ -136,12 +136,14 @@ app.post('/main', function(req, res) {
         res.sendFile(path.join(__dirname, '/index.html'));
     }
 
-    if(body[body.length-3] != undefined){ // will get selected value if post req has a selected value
+    if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
         console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
 
         //insert logic to determine correctness here
         //below is sample setting of correctness
+        checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
         body.push({'correctness': 'X'}) //'X' denotes correct, ' ' denotes incorrect
+        
 
         //insert logic to determine bingo achieved here
         //below is sample setting of gameOver
@@ -209,6 +211,13 @@ async function getQuestionsAndAnswersFromDB(cat) {
         qAndAs.push(questions[i] + '`' + answers[i]); //using ` char as delimiter
     }
     return qAndAs;
+}
+
+async function checkUserAnswer(question, answer){
+    console.log(answer + ', ' + question);
+    var results = await pool.query("SELECT COUNT(*) FROM question where text = " + '\'' + question + '\'' + ' AND answer = ' + '\'' + answer + '\'');
+    console.log('correct if >= 1 : ' + results.rows[0].count);
+    //TODO -- add logic to return value to make decision based on
 }
 
   
