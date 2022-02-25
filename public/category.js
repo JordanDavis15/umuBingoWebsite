@@ -4,7 +4,7 @@ function getCategories(){
     fetch('/category', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({'selected': 'get-categories'})
+        body: JSON.stringify({'selected': 'getcategories'})
         
     })
     .then(res => res.json())

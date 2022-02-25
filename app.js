@@ -95,7 +95,8 @@ app.get('/index', (req, res) => {
 //logic to handle post reqs from category.html
 app.post('/category', function(req, res) {
     var selectedOption = req.body.selected;
-    if(selectedOption != 'get-categories'){
+    if(selectedOption != 'getcategories'){
+        selectedOption = cleanInput(selectedOption);
         console.log('category selected = ' + selectedOption);
         res.cookie('category', selectedOption);
         res.send(JSON.stringify('good'));
@@ -122,6 +123,7 @@ app.post('/main', function(req, res) {
     
     if(body.SOLaddr != undefined && req.cookies.category == undefined){ //&& req.cookies.category == undefined){                    //check to see if user has selected a category yet
         console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
+        body.SOLaddr = cleanInput(body.SOLaddr);
         res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
         res.sendFile(path.join(__dirname, '/category.html'));
     }
@@ -214,14 +216,35 @@ async function getQuestionsAndAnswersFromDB(cat) {
 }
 
 async function checkUserAnswer(question, answer){
+    question = queryFix(question);
     console.log(answer + ', ' + question);
+    console.log("SELECT COUNT(*) FROM question where text = " + '\"' + question + '\"' + ' AND answer = ' + '\"' + answer + '\"');
     var results = await pool.query("SELECT COUNT(*) FROM question where text = " + '\'' + question + '\'' + ' AND answer = ' + '\'' + answer + '\'');
     console.log('correct if >= 1 : ' + results.rows[0].count);
+    if(results.rows[0].count > 0){ //means the selected answer is correct
+        return true;
+    }
+    return false;
     //TODO -- add logic to return value to make decision based on
 }
 
   
 function setAddrAndStartTimeOnDB(addr, time){
     pool.query("INSERT ")
+}
+
+//=========================================
+// SQL input cleaning / reformatting
+//=========================================
+
+function cleanInput(string){
+    //string = string.replaceAll('\'', '');
+    //string = string.replaceAll('\"', '');
+    string = string.replaceAll(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+    return string;
+}
+
+function queryFix(string){
+    return string.replaceAll('\'', '\'\'');
 }
 
