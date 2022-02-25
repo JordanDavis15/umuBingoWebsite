@@ -104,7 +104,7 @@ app.post('/category', function(req, res) {
     else{
         //self calling async function to gather data from getCategoriesFromDB async call
         (async () => {
-            console.log('requested database data')
+            console.log('DBACCESS:=> requested database data')
             var cats = await getCategoriesFromDB();
             console.log(cats);
             res.send(JSON.stringify(cats));
@@ -138,34 +138,64 @@ app.post('/main', function(req, res) {
         res.sendFile(path.join(__dirname, '/index.html'));
     }
 
-    if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
-        console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
+    // if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
+    //     console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
 
-        //insert logic to determine correctness here
-        //below is sample setting of correctness
-        checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
-        body.push({'correctness': 'X'}) //'X' denotes correct, ' ' denotes incorrect
+    //     //insert logic to determine correctness here
+    //     //below is sample setting of correctness
+    //     (async () => {
+    //         console.log('DBACCESS:=> verify correctness of selected answer')
+    //         var isCorrect = await checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
+    //         console.log('iscorrect result'+isCorrect);
+    //         body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
+
+    //     })();
         
-
-        //insert logic to determine bingo achieved here
-        //below is sample setting of gameOver
-        body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
-
-        res.send(JSON.stringify(req.body));
-    }
+    //     //insert logic to determine bingo achieved here
+    //     //below is sample setting of gameOver
+    //     body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
+    //     console.log('after game over');
+    
+    //     console.log(req.body);
+    //     res.send(JSON.stringify(req.body));
+    // }
 
 
     //res.send('post recieved');
   });
 
-  app.post('/getans', function(req, res){
-      if(req.body.questionsAndAnswers == 'get'){
+
+  app.post('/selection', function(req, res) {
+    var body = req.body;
+    console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
+
+        //insert logic to determine correctness here
+        //below is sample setting of correctness
         (async () => {
-            console.log('requested question and answer data')
+            console.log('DBACCESS:=> verify correctness of selected answer')
+            var isCorrect = await checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
+            console.log('iscorrect result'+isCorrect);
+            body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
+
+            //insert logic to determine bingo achieved here
+            //below is sample setting of gameOver
+            body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
+            console.log('after game over');
+        
+            console.log(req.body);
+            res.send(JSON.stringify(req.body));
+        })();
+  });
+
+
+  app.post('/getans', function(req, res){
+    if(req.body.questionsAndAnswers == 'get'){
+        (async () => {
+            console.log('DBACCESS:=> requested question and answer data')
             var qAndAs = await getQuestionsAndAnswersFromDB(req.cookies.category);
             res.send(JSON.stringify(qAndAs));
         })();
-      }
+    }
   });
 
 
@@ -217,10 +247,8 @@ async function getQuestionsAndAnswersFromDB(cat) {
 
 async function checkUserAnswer(question, answer){
     question = queryFix(question);
-    console.log(answer + ', ' + question);
     console.log("SELECT COUNT(*) FROM question where text = " + '\"' + question + '\"' + ' AND answer = ' + '\"' + answer + '\"');
     var results = await pool.query("SELECT COUNT(*) FROM question where text = " + '\'' + question + '\'' + ' AND answer = ' + '\'' + answer + '\'');
-    console.log('correct if >= 1 : ' + results.rows[0].count);
     if(results.rows[0].count > 0){ //means the selected answer is correct
         return true;
     }

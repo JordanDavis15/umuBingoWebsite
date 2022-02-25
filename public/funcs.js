@@ -63,7 +63,7 @@ function tableSelPost(){
     btnsArr.push(currQuestion);
     btnsArr.push(tmpSel);
     console.log('Button data from screen: ' + buttonList.toString());
-    fetch('/main', {
+    fetch('/selection', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}, 
         body: JSON.stringify(btnsArr)
@@ -83,7 +83,7 @@ function boardProcessing(boardRes){
     console.log(boardRes[boardRes.length - 2].correctness); //gets correctness of answer
 
     //if incorrect do not mark a space
-    if(boardRes[boardRes.length - 2].correctness != 'X'){
+    if(boardRes[boardRes.length - 2].correctness != true){
         //insert logic to notify user that answer was incorrect
         console.log('incorrect');
     }
