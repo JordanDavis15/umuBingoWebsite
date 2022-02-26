@@ -1,3 +1,6 @@
+var questionIndex = 0;
+var qAndAs = null;
+
 function myFunction(){   
     //document.write('Welcome to the UMU bingo game:' + id); 
     console.log('button clicked');
@@ -9,6 +12,7 @@ function createTable(qAndAs){
     console.log('creating board table');
     var currIndex = 0;
     var btnArr = [];
+    this.qAndAs = qAndAs;
     console.log(qAndAs[0]);
     for(i = 0; i < qAndAs.length; i++){
         qAndAs[i] = qAndAs[i].split('`');
@@ -36,7 +40,8 @@ function createTable(qAndAs){
             currIndex++;
         }
     }
-    document.getElementById('questionbox').textContent = qAndAs[0][0];
+    document.getElementById('questionbox').textContent = qAndAs[0][questionIndex];
+    incrementQuestionIndex();
 }
 
 
@@ -143,7 +148,20 @@ function updateDisplayBoard(boardInfo){
             currIndex++;
         }
     }
+    console.log(this.questionIndex);
+    document.getElementById('questionbox').textContent = qAndAs[this.questionIndex][0]
+    incrementQuestionIndex();
     console.log('board has been updated!');
+}
+
+function incrementQuestionIndex(){
+    console.log("length of questionIndex" + this.questionIndex);
+    if(this.questionIndex + 1 < this.qAndAs.length){
+        this.questionIndex ++;
+    }
+    else{
+        this.questionIndex = 0;
+    }
 }
 
 
