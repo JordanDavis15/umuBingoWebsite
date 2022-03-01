@@ -149,9 +149,14 @@ function updateDisplayBoard(boardInfo){
         }
     }
     console.log(this.questionIndex);
-    document.getElementById('questionbox').textContent = qAndAs[this.questionIndex][0]
+    document.getElementById('questionbox').textContent = qAndAs[this.questionIndex][0];
     incrementQuestionIndex();
     console.log('board has been updated!');
+}
+
+function newQuestion(){
+    document.getElementById('questionbox').textContent = qAndAs[this.questionIndex][0];
+    incrementQuestionIndex();
 }
 
 function incrementQuestionIndex(){

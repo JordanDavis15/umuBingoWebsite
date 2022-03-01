@@ -179,7 +179,8 @@ app.post('/main', function(req, res) {
 
             //insert logic to determine bingo achieved here
             //below is sample setting of gameOver
-            body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
+            
+            body.push({'gameOver': isGameOver(req.body)}) //'X' denotes over, ' ' denotes bingo not achieved yet
             console.log('after game over');
         
             console.log(req.body);
@@ -256,9 +257,59 @@ async function checkUserAnswer(question, answer){
     //TODO -- add logic to return value to make decision based on
 }
 
-  
+
 function setAddrAndStartTimeOnDB(addr, time){
     pool.query("INSERT ")
+}
+
+//=========================================
+// game over check
+//=========================================
+
+function isGameOver(data){
+   console.log('inside game over check')
+    var rowCounter = 0;
+    var columnCounter = 0;
+    
+    //row checker
+    for(i = 0; i < data.length; i++){
+        if(rowCounter == 5){
+            console.log('!!!!!!!!!gameOver!!!!!!!!!');
+            return 'X';
+        }
+        if(data[i].name != undefined){
+            //checks for multiple correct answers in a row
+            if(data[i].name == 'X'){
+                rowCounter++
+            }
+            else{
+                rowCounter = 0;
+            }
+        }
+        else{
+            return ' '; //checked whole board, jump out of loop when reached additional req info in body
+        }
+    }
+    
+    //column checker
+    for(i = 1 ; i < 6; i++){
+        for(j = 0; j < data.length; j++){
+            if(columnCounter == 5){
+                console.log('!!!!!!!!!gameOver!!!!!!!!!');
+                return 'X';
+            }
+            if(data[i].name != undefined){
+                if(data[i].name == 'X' && j % 5 == i){
+                    columnCounter++
+                }
+                else{
+                    columnCounter = 0;
+                }
+            }
+        }
+    }
+    return ' '; //not a winner
+
 }
 
 //=========================================
