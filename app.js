@@ -183,7 +183,7 @@ app.post('/main', function(req, res) {
             body.push({'gameOver': isGameOver(req.body)}) //'X' denotes over, ' ' denotes bingo not achieved yet
             console.log('after game over');
         
-            console.log(req.body);
+            //console.log(req.body);
             res.send(JSON.stringify(req.body));
         })();
   });
@@ -267,49 +267,57 @@ function setAddrAndStartTimeOnDB(addr, time){
 //=========================================
 
 function isGameOver(data){
-   console.log('inside game over check')
     var rowCounter = 0;
     var columnCounter = 0;
     
     //row checker
     for(i = 0; i < data.length; i++){
-        if(rowCounter == 5){
-            console.log('!!!!!!!!!gameOver!!!!!!!!!');
-            return 'X';
-        }
         if(data[i].name != undefined){
             //checks for multiple correct answers in a row
             if(data[i].name == 'X'){
                 rowCounter++
+                console.log('rowCounter = ' + rowCounter)
+                if (rowCounter == 5){
+                    return 'X';
+                }
             }
             else{
                 rowCounter = 0;
             }
+
+            //if next row, reset rowCount
+            if(i > 0 && i % 5 == 0){
+                rowCounter = 0;
+            }
         }
         else{
-            return ' '; //checked whole board, jump out of loop when reached additional req info in body
+            break; //checked whole board, jump out of loop when reached additional req info in body
         }
     }
     
     //column checker
-    for(i = 1 ; i < 6; i++){
+    for(i = 0 ; i < 5; i++){
         for(j = 0; j < data.length; j++){
-            if(columnCounter == 5){
-                console.log('!!!!!!!!!gameOver!!!!!!!!!');
-                return 'X';
-            }
             if(data[i].name != undefined){
-                if(data[i].name == 'X' && j % 5 == i){
+                if(data[j].name == 'X' && j % 5 == i){
                     columnCounter++
-                }
-                else{
-                    columnCounter = 0;
                 }
             }
         }
+        if(columnCounter == 5){
+            return 'X';
+        }
+        else{
+            columnCounter = 0;
+        }
     }
+    console.log('columCounter = ' + columnCounter);
+    console.log('rowCounter = ' + rowCounter);
+    // if(columnCounter == 5 || rowCounter == 5){
+    //     console.log('!!!!!!!!!!!WINNER!!!!!!!!!!!!!!!');
+    //     return 'X'; //winner
+    // }
     return ' '; //not a winner
-
 }
 
 //=========================================

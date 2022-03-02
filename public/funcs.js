@@ -86,15 +86,22 @@ function boardProcessing(boardRes){
     console.log('Data recieved from server = ');
     console.log(boardRes[boardRes.length - 3].selected); //gets last selected answer
     console.log(boardRes[boardRes.length - 2].correctness); //gets correctness of answer
+    console.log(boardRes[boardRes.length - 1].gameOver); //gets game over value from server
 
-    //if incorrect do not mark a space
-    if(boardRes[boardRes.length - 2].correctness != true){
-        //insert logic to notify user that answer was incorrect
-        console.log('incorrect');
+    //if gameover notify user
+    if(boardRes[boardRes.length - 1].gameOver == 'X'){
+        gameOver(boardRes);
     }
     else{
-        console.log('correct answer, updating table...');
-        updateDisplayBoard(boardRes);
+        //if incorrect do not mark a space
+        if(boardRes[boardRes.length - 2].correctness != true){
+            //insert logic to notify user that answer was incorrect
+            console.log('incorrect');
+        }
+        else{
+            console.log('correct answer, updating table...');
+            updateDisplayBoard(boardRes);
+        }
     }
 }
 
@@ -167,6 +174,10 @@ function incrementQuestionIndex(){
     else{
         this.questionIndex = 0;
     }
+}
+
+function gameOver(data){
+    document.getElementById('header').textContent = 'BINGO!! Game Over!';
 }
 
 
