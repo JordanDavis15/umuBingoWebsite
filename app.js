@@ -286,7 +286,7 @@ function isGameOver(data){
             }
 
             //if next row, reset rowCount
-            if(i > 0 && i % 5 == 0){
+            if(i > 0 && i % 4 == 0){
                 rowCounter = 0;
             }
         }
@@ -299,7 +299,7 @@ function isGameOver(data){
     for(i = 0 ; i < 5; i++){
         for(j = 0; j < data.length; j++){
             if(data[i].name != undefined){
-                if(data[j].name == 'X' && j % 5 == i){
+                if(data[j].name == 'X' && j % 4 == i){
                     columnCounter++
                 }
             }
