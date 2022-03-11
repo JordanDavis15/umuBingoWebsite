@@ -125,6 +125,12 @@ app.post('/main', function(req, res) {
         console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
         body.SOLaddr = cleanInput(body.SOLaddr);
         res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+
+        //update users table
+        console.log('adding user address and date to users table');
+        addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
+
+
         res.sendFile(path.join(__dirname, '/category.html'));
     }
     else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
@@ -216,6 +222,12 @@ app.delete('/delete-data', function (req, res) {
 var server = app.listen(5000, function () {
     console.log('Node server is running...');
 });
+
+
+//adds user address and playing date to users table
+async function addUserToDB(addr, login_date) {
+    pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\')');
+}
 
 //returns array of categories from database
 async function getCategoriesFromDB() {
