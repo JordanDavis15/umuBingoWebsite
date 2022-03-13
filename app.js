@@ -92,10 +92,29 @@ app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
 
+//logic to handle post reqs from login.html
+app.post('/login', function(req, res) {
+    var body = req.body;
+    if(body.SOLaddr != undefined || body.SOLaddr == ' '){
+        body.SOLaddr = cleanInput(body.SOLaddr);
+        res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+
+        //update users table
+        console.log('adding user address and date to users table');
+        addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
+
+
+        res.sendFile(path.join(__dirname, '/category.html'));
+    }
+});
+
 //logic to handle post reqs from category.html
 app.post('/category', function(req, res) {
     var selectedOption = req.body.selected;
-    if(selectedOption != 'getcategories'){
+    if(req.cookies.userid == undefined){
+        res.sendFile(path.join(__dirname, '/login.html'));
+    }
+    else if(selectedOption != 'getcategories'){
         selectedOption = cleanInput(selectedOption);
         console.log('category selected = ' + selectedOption);
         res.cookie('category', selectedOption);
@@ -112,34 +131,39 @@ app.post('/category', function(req, res) {
     }
   });
 
-//logic to handle post reqs from index.html and login.html
+//logic to handle post reqs from index.html
 app.post('/main', function(req, res) {
     var body = req.body;
     console.log(body); 
 
-    if(body.SOLaddr == undefined){
+    if(req.cookies.userid == undefined){
         res.sendFile(path.join(__dirname, '/login.html'));
     }
     
-    if(body.SOLaddr != undefined && req.cookies.category == undefined){ //&& req.cookies.category == undefined){                    //check to see if user has selected a category yet
-        console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
-        body.SOLaddr = cleanInput(body.SOLaddr);
-        res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+    // if(body.SOLaddr != undefined && req.cookies.category == undefined){ //&& req.cookies.category == undefined){                    //check to see if user has selected a category yet
+    //     console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
+    //     body.SOLaddr = cleanInput(body.SOLaddr);
+    //     res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
 
-        //update users table
-        console.log('adding user address and date to users table');
-        addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
+    //     //update users table
+    //     console.log('adding user address and date to users table');
+    //     addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
 
 
+    //     res.sendFile(path.join(__dirname, '/category.html'));
+    // }
+    // else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
+    //     console.log('=====NEW Logged-in Post Req=====')
+    //     console.log('Current user: ' + req.cookies.userid);
+
+    // }
+
+    else if(req.cookies.category == undefined){
         res.sendFile(path.join(__dirname, '/category.html'));
     }
-    else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
-        console.log('=====NEW Logged-in Post Req=====')
-        console.log('Current user: ' + req.cookies.userid);
+    else{
 
-    }
-    if(req.cookies.category != undefined){
-        console.log('attempting to send index.html');
+        console.log('User: ' + req.cookies.SOLaddr + ' attempting to send index.html');
         console.log(time.getTime() / 1000); // / by 1000 to get seconds
         res.sendFile(path.join(__dirname, '/index.html'));
     }
