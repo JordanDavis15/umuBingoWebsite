@@ -3,8 +3,9 @@ var cookieParser = require('cookie-parser');
 
 const path = require('path');
 const bodyParser = require('body-parser');
-const { Pool } = require('pg')
-const fs = require('fs')
+const { Pool } = require('pg');
+const fs = require('fs');
+const portNum = 5000;
 
 var app = express();
 var loginInfo = Array();
@@ -64,7 +65,7 @@ app.use('/public', express.static('./public'));
 
 
 /************************/
-/*routes                */
+/*routes logic          */
 /************************/
 
 //route to login page
@@ -92,19 +93,31 @@ app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
 
+
+/************************/
+/*post logic            */
+/************************/
+
 //logic to handle post reqs from login.html
 app.post('/login', function(req, res) {
     var body = req.body;
     if(body.SOLaddr != undefined || body.SOLaddr == ' '){
-        body.SOLaddr = cleanInput(body.SOLaddr);
-        res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+        
 
         //update users table
-        console.log('adding user address and date to users table');
-        addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
-
-
-        res.sendFile(path.join(__dirname, '/category.html'));
+        (async () => {
+            console.log('adding user address and date to users table');
+            var data = await addUserToDB(body.SOLaddr, new Date().toLocaleDateString()); //2nd argument gets current system date
+            console.log('response from adduser call' + data);
+            if(data == 1){
+                res.sendFile(path.join(__dirname, '/login.html'));
+            }
+            else{
+                body.SOLaddr = cleanInput(body.SOLaddr);
+                res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
+                res.sendFile(path.join(__dirname, '/category.html'));
+            }
+        })(); 
     }
 });
 
@@ -131,91 +144,33 @@ app.post('/category', function(req, res) {
     }
   });
 
-//logic to handle post reqs from index.html
-app.post('/main', function(req, res) {
-    var body = req.body;
-    console.log(body); 
-
-    if(req.cookies.userid == undefined){
+  //logic to handle category selection
+  app.post('/selection', function(req, res) {
+    if(req.cookies.userid == undefined || req.cookies.userid == ' '){
         res.sendFile(path.join(__dirname, '/login.html'));
     }
-    
-    // if(body.SOLaddr != undefined && req.cookies.category == undefined){ //&& req.cookies.category == undefined){                    //check to see if user has selected a category yet
-    //     console.log('SOL address entered = ' + body.SOLaddr); //access the value of the json like this
-    //     body.SOLaddr = cleanInput(body.SOLaddr);
-    //     res.cookie('userid', body.SOLaddr);                   //sets userid cookie to their SOL Wallet address that was entered
-
-    //     //update users table
-    //     console.log('adding user address and date to users table');
-    //     addUserToDB(body.SOLaddr, new Date().toLocaleDateString()) //2nd argument gets current system date
-
-
-    //     res.sendFile(path.join(__dirname, '/category.html'));
-    // }
-    // else{ //will always want to check for userid cookie value after user has entered their SOL wallet addr
-    //     console.log('=====NEW Logged-in Post Req=====')
-    //     console.log('Current user: ' + req.cookies.userid);
-
-    // }
-
-    else if(req.cookies.category == undefined){
-        res.sendFile(path.join(__dirname, '/category.html'));
-    }
     else{
+        var body = req.body;
+        console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
 
-        console.log('User: ' + req.cookies.SOLaddr + ' attempting to send index.html');
-        console.log(time.getTime() / 1000); // / by 1000 to get seconds
-        res.sendFile(path.join(__dirname, '/index.html'));
-    }
+            //insert logic to determine correctness here
+            //below is sample setting of correctness
+            (async () => {
+                console.log('DBACCESS:=> verify correctness of selected answer')
+                var isCorrect = await checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
+                console.log('iscorrect result'+isCorrect);
+                body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
 
-    // if(body[body.length-1] != undefined){ // will get selected value if post req has a selected value
-    //     console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
-
-    //     //insert logic to determine correctness here
-    //     //below is sample setting of correctness
-    //     (async () => {
-    //         console.log('DBACCESS:=> verify correctness of selected answer')
-    //         var isCorrect = await checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
-    //         console.log('iscorrect result'+isCorrect);
-    //         body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
-
-    //     })();
-        
-    //     //insert logic to determine bingo achieved here
-    //     //below is sample setting of gameOver
-    //     body.push({'gameOver': ' '}) //'X' denotes over, ' ' denotes bingo not achieved yet
-    //     console.log('after game over');
-    
-    //     console.log(req.body);
-    //     res.send(JSON.stringify(req.body));
-    // }
-
-
-    //res.send('post recieved');
-  });
-
-
-  app.post('/selection', function(req, res) {
-    var body = req.body;
-    console.log('user: ' + req.cookies.userid + ' selected: ' + body[body.length-1].selected);
-
-        //insert logic to determine correctness here
-        //below is sample setting of correctness
-        (async () => {
-            console.log('DBACCESS:=> verify correctness of selected answer')
-            var isCorrect = await checkUserAnswer(body[body.length-2].question, body[body.length-1].selected);
-            console.log('iscorrect result'+isCorrect);
-            body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
-
-            //insert logic to determine bingo achieved here
-            //below is sample setting of gameOver
+                //insert logic to determine bingo achieved here
+                //below is sample setting of gameOver
+                
+                body.push({'gameOver': isGameOver(req.body)}) //'X' denotes over, ' ' denotes bingo not achieved yet
+                console.log('after game over');
             
-            body.push({'gameOver': isGameOver(req.body)}) //'X' denotes over, ' ' denotes bingo not achieved yet
-            console.log('after game over');
-        
-            //console.log(req.body);
-            res.send(JSON.stringify(req.body));
-        })();
+                //console.log(req.body);
+                res.send(JSON.stringify(req.body));
+            })();
+    }
   });
 
 
@@ -230,27 +185,29 @@ app.post('/main', function(req, res) {
   });
 
 
-/*
-app.post('/submit-data', function (req, res) {
-    var name = req.body.firstName + ' ' + req.body.lastName;
-    
-    res.send(name + ' Submitted Successfully!');
-});
-app.put('/update-data', function (req, res) {
-    res.send('PUT Request');
-});
-app.delete('/delete-data', function (req, res) {
-    res.send('DELETE Request');
-});*/
+/************************/
+/*server creation       */
+/************************/
 
-var server = app.listen(5000, function () {
+//creates the server and listens for connections on port 5000
+var server = app.listen(portNum, function () {
     console.log('Node server is running...');
 });
 
 
+/************************/
+/*database accesses     */
+/************************/
+
 //adds user address and playing date to users table
 async function addUserToDB(addr, login_date) {
-    pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\')');
+    try{
+        await pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\')');
+    }
+    catch(err){
+        console.log('ERROR!!');
+        return 1;
+    }
 }
 
 //returns array of categories from database
@@ -276,6 +233,7 @@ async function getQuestionsAndAnswersFromDB(cat) {
         //qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
     }
     questions.sort(() => Math.random() - 0.5);
+    answers.sort(() => Math.random() - 0.5);
     for(i = 0; i < questions.length; i++){
         qAndAs.push(questions[i] + '`' + answers[i]); //using ` char as delimiter
     }
