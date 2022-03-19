@@ -10,7 +10,7 @@ const portNum = 5000;
 var app = express();
 var loginInfo = Array();
 var pool = null; //set pool to null until init
-var time = new Date();
+var date = new Date();
 
 app.use(cookieParser());
 
@@ -109,7 +109,7 @@ app.post('/login', function(req, res) {
             console.log('adding user address and date to users table');
             var data = await addUserToDB(body.SOLaddr, new Date().toLocaleDateString()); //2nd argument gets current system date
             console.log('response from adduser call' + data);
-            if(data == 1){
+            if(data == -1){
                 res.sendFile(path.join(__dirname, '/login.html'));
             }
             else{
@@ -202,11 +202,11 @@ var server = app.listen(portNum, function () {
 //adds user address and playing date to users table
 async function addUserToDB(addr, login_date) {
     try{
-        await pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\')');
+        await pool.query("INSERT INTO users (wallet_address, login_date, start_time) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ", " + date.getTime() + ")");
     }
     catch(err){
         console.log('ERROR!!');
-        return 1;
+        return -1;
     }
 }
 
