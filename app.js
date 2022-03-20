@@ -16,9 +16,9 @@ app.use(cookieParser());
 
 try{
     //test to see if env vars can be used
-    if (process.env.POSTGRES_USER == undefined || process.env.POSTGRES_HOST == undefined ||
-        process.env.POSTGRES_DB == undefined || process.env.POSTGRES_PASSWORD == undefined ||
-        process.env.POSTGRES_DEV_PORT == undefined){
+    if (process.env.POSTGRES_USER === undefined || process.env.POSTGRES_HOST === undefined ||
+        process.env.POSTGRES_DB === undefined || process.env.POSTGRES_PASSWORD === undefined ||
+        process.env.POSTGRES_PORT === undefined){
         throw error; //env vars cannot be used
     }
     pool = new Pool({
@@ -26,7 +26,7 @@ try{
         host: process.env.POSTGRES_HOST,
         database: process.env.POSTGRES_DB,
         password: process.env.POSTGRES_PASSWORD,
-        port: process.env.POSTGRES_DEV_PORT,
+        port: process.env.POSTGRES_PORT,
     });
 }
 catch{
