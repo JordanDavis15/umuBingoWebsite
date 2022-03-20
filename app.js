@@ -161,14 +161,23 @@ app.post('/category', function(req, res) {
                 console.log('iscorrect result'+isCorrect);
                 body.push({'correctness': isCorrect}) //true denotes correct, false denotes incorrect
 
-                //insert logic to determine bingo achieved here
-                //below is sample setting of gameOver
-                var gameOver = isGameOver(req.body);
-                body.push({'gameOver': gameOver}) //'X' denotes over, ' ' denotes bingo not achieved yet
-                console.log('after game over');
+                if(isCorrect){
+                    //insert logic to determine bingo achieved here
+                    //below is sample setting of gameOver
+                    var tmpBody = req.body;
+                    for(i = 0; i < tmpBody.length; i++){
+                        if(tmpBody[i].name == tmpBody[tmpBody.length-2].selected){
+                            tmpBody[i].name = 'X';
+                        }
+                    }
 
-                if(gameOver == 'X'){
-                    gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
+                    var gameOver = isGameOver(tmpBody);
+                    body.push({'gameOver': gameOver}) //'X' denotes over, ' ' denotes bingo not achieved yet
+                    console.log('after game over');
+
+                    if(gameOver == 'X'){
+                        gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
+                    }
                 }
             
                 //console.log(req.body);
@@ -274,6 +283,10 @@ async function gameOverDBUpdate(addr, completion_date){
 function isGameOver(data){
     var rowCounter = 0;
     var columnCounter = 0;
+
+    for(i = 0; i < data.length; i++){
+        console.log(data[i].name);
+    }
     
     //row checker
     for(i = 0; i < data.length; i++){
@@ -303,9 +316,10 @@ function isGameOver(data){
     //column checker
     for(i = 0 ; i < 5; i++){
         for(j = 0; j < data.length; j++){
-            if(data[i].name != undefined){
+            if(data[j].name != undefined){
                 if(data[j].name == 'X' && j % 4 == i){
                     columnCounter++
+                    console.log('columCounter, i, j = ' + columnCounter + ',' + i + ',' + j);
                 }
             }
         }
@@ -316,8 +330,8 @@ function isGameOver(data){
             columnCounter = 0;
         }
     }
-    console.log('columCounter = ' + columnCounter);
-    console.log('rowCounter = ' + rowCounter);
+    // console.log('columCounter = ' + columnCounter);
+    // console.log('rowCounter = ' + rowCounter);
     // if(columnCounter == 5 || rowCounter == 5){
     //     console.log('!!!!!!!!!!!WINNER!!!!!!!!!!!!!!!');
     //     return 'X'; //winner
