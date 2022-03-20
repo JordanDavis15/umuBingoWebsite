@@ -163,9 +163,13 @@ app.post('/category', function(req, res) {
 
                 //insert logic to determine bingo achieved here
                 //below is sample setting of gameOver
-                
-                body.push({'gameOver': isGameOver(req.body)}) //'X' denotes over, ' ' denotes bingo not achieved yet
+                var gameOver = isGameOver(req.body);
+                body.push({'gameOver': gameOver}) //'X' denotes over, ' ' denotes bingo not achieved yet
                 console.log('after game over');
+
+                if(gameOver == 'X'){
+                    gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
+                }
             
                 //console.log(req.body);
                 res.send(JSON.stringify(req.body));
@@ -202,7 +206,7 @@ var server = app.listen(portNum, function () {
 //adds user address and playing date to users table
 async function addUserToDB(addr, login_date) {
     try{
-        await pool.query("INSERT INTO users (wallet_address, login_date, start_time) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ", " + date.getTime() + ")");
+        await pool.query("INSERT INTO users (wallet_address, login_date, start_time) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ", " + new Date().getTime() + ")");
     }
     catch(err){
         console.log('ERROR!!');
@@ -251,9 +255,16 @@ async function checkUserAnswer(question, answer){
     //TODO -- add logic to return value to make decision based on
 }
 
-
-function setAddrAndStartTimeOnDB(addr, time){
-    pool.query("INSERT ")
+// stores game completion time and calculates total game time
+async function gameOverDBUpdate(addr, completion_date){
+    try{
+        await pool.query("UPDATE users SET completion_time = " + new Date().getTime() + " WHERE wallet_address = " + '\'' + addr + '\'' + "AND login_date = " + '\'' + completion_date + '\'' );
+    }
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
+    }
 }
 
 //=========================================
