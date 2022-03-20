@@ -16,9 +16,9 @@ app.use(cookieParser());
 
 try{
     //test to see if env vars can be used
-    if (process.env.POSTGRES_USER === undefined || process.env.POSTGRES_HOST === undefined ||
-        process.env.POSTGRES_DB === undefined || process.env.POSTGRES_PASSWORD === undefined ||
-        process.env.POSTGRES_PORT === undefined){
+    if (process.env.POSTGRES_USER == undefined || process.env.POSTGRES_HOST == undefined ||
+        process.env.POSTGRES_DB == undefined || process.env.POSTGRES_PASSWORD == undefined ||
+        process.env.POSTGRES_PORT == undefined){
         throw error; //env vars cannot be used
     }
     pool = new Pool({
@@ -290,6 +290,11 @@ function isGameOver(data){
     
     //row checker
     for(i = 0; i < data.length; i++){
+        //if next row, reset rowCount
+        if(i > 0 && i % 5 == 0){
+            rowCounter = 0;
+        }
+
         if(data[i].name != undefined){
             //checks for multiple correct answers in a row
             if(data[i].name == 'X'){
@@ -298,14 +303,6 @@ function isGameOver(data){
                 if (rowCounter == 5){
                     return 'X';
                 }
-            }
-            else{
-                rowCounter = 0;
-            }
-
-            //if next row, reset rowCount
-            if(i > 0 && i % 4 == 0){
-                rowCounter = 0;
             }
         }
         else{
@@ -317,7 +314,7 @@ function isGameOver(data){
     for(i = 0 ; i < 5; i++){
         for(j = 0; j < data.length; j++){
             if(data[j].name != undefined){
-                if(data[j].name == 'X' && j % 4 == i){
+                if(data[j].name == 'X' && j % 5 == i){
                     columnCounter++
                     console.log('columCounter, i, j = ' + columnCounter + ',' + i + ',' + j);
                 }
