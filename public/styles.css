@@ -13,11 +13,19 @@
   color: white;
   border-radius: 3px;
   width: 65%;
-  height: 2em;
+  height: 1.4em;
+  
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.tableContainer{
+  width: 95%;
 }
 
 table {
   width: 65%;
+  height: 35%;
 }
 
 table, th, td {
@@ -29,28 +37,51 @@ th, td{
   width: 15%;
 }
 
+td{
+  height: fit-content;
+}
+
 th {
   background-color: #7101b3;
   color: #ffffff;
   border-radius: 10px;
-  height: 3em;
+  height: 25%;
   text-align: center;
   font-size: x-large;
 }
 .tableData td{
   background-color: #a200ff;
   border-radius: 10px;
-  height: 4em;
   text-align: center;
+  font-size: 10%; 
+  overflow: hidden;
 }
 
 .tableDataGroups td{
   background-color: #a200ff;
   color: #ffffff;
   border-radius: 10px;
-  height: 5em;
+  
+  width: 65%;
   text-align: center;
+
+  display: table-cell;
 }
 .tableDataGroups td:hover{
   background-color: #8100cc;
+}
+
+#boardTable{
+  table-layout: fixed;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#boardTable tr{
+  height: 7vh;
+}
+
+#boardTable td{
+  width: 25%;
+  font-size: calc(20vw / 10);
 }
