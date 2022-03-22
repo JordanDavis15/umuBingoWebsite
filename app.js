@@ -110,7 +110,8 @@ app.post('/login', function(req, res) {
             var data = await addUserToDB(body.SOLaddr, new Date().toLocaleDateString()); //2nd argument gets current system date
             console.log('response from adduser call' + data);
             if(data == -1){
-                res.sendFile(path.join(__dirname, '/login.html'));
+                res.sendFile(path.join(__dirname, '/scores.html'));
+                //res.sendFile(path.join(__dirname, '/login.html'));
             }
             else{
                 body.SOLaddr = cleanInput(body.SOLaddr);
@@ -186,7 +187,7 @@ app.post('/category', function(req, res) {
     }
   });
 
-
+  //logic to handle post reqs for questions and answers
   app.post('/getans', function(req, res){
     if(req.body.questionsAndAnswers == 'get'){
         (async () => {
@@ -195,6 +196,18 @@ app.post('/category', function(req, res) {
             res.send(JSON.stringify(qAndAs));
         })();
     }
+  });
+
+
+  //logic to handle post reqs from category.html
+  app.post('/scores', function(req, res) {
+    //self calling async function to gather lowest 15 times from database
+    (async () => {
+        console.log('DBACCESS:=> requested database data: scores')
+        var scores = await getScoresFromDB();
+        console.log(scores);
+        res.send(JSON.stringify(scores));
+    })();
   });
 
 
@@ -274,6 +287,20 @@ async function gameOverDBUpdate(addr, completion_date){
         console.log('ERROR!!');
         return -1;
     }
+}
+
+//returns array of lowest 15 times from database
+async function getScoresFromDB() {
+    var results = await pool.query("SELECT wallet_address FROM users WHERE login_date = " + '\'' + new Date().toLocaleDateString() + '\'' + " ORDER BY game_time");
+    var scores = [];
+    var maxResults = 15;
+    if(results.rows.length < maxResults){
+        maxResults = results.rows.length;
+    }
+    for(i = 0; i < maxResults; i++){
+        scores.push(results.rows[i].wallet_address);
+    }
+    return scores;
 }
 
 //=========================================
