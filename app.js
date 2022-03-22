@@ -131,6 +131,10 @@ app.post('/category', function(req, res) {
     else if(selectedOption != 'getcategories'){
         selectedOption = cleanInput(selectedOption);
         console.log('category selected = ' + selectedOption);
+        (async () => {
+            console.log('updating user : ' + req.cookies.userid + 'start time');
+            await storeStartTime(req.cookies.userid, new Date().toLocaleDateString()); //2nd argument gets current system date
+        })(); 
         res.cookie('category', selectedOption);
         res.send(JSON.stringify('good'));
     }
@@ -145,7 +149,7 @@ app.post('/category', function(req, res) {
     }
   });
 
-  //logic to handle category selection
+  //logic to handle board element selection
   app.post('/selection', function(req, res) {
     if(req.cookies.userid == undefined || req.cookies.userid == ' '){
         res.sendFile(path.join(__dirname, '/login.html'));
@@ -228,7 +232,7 @@ var server = app.listen(portNum, function () {
 //adds user address and playing date to users table
 async function addUserToDB(addr, login_date) {
     try{
-        await pool.query("INSERT INTO users (wallet_address, login_date, start_time) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ", " + new Date().getTime() + ")");
+        await pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ")");
     }
     catch(err){
         console.log('ERROR!!');
@@ -236,45 +240,77 @@ async function addUserToDB(addr, login_date) {
     }
 }
 
+async function storeStartTime(addr, login_date){
+    try{
+        await pool.query("UPDATE users SET start_time = " + new Date().getTime() + " WHERE wallet_address = " + '\'' + addr + '\'' + "AND login_date = " + '\'' + login_date + '\'' );
+    }
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
+    }
+}
+
 //returns array of categories from database
 async function getCategoriesFromDB() {
-    var results = await pool.query("SELECT DISTINCT category from question");
-    var cats = [];
-    for(i = 0; i < results.rows.length; i++){
-        cats.push(results.rows[i].category);
+    try{
+        var results = await pool.query("SELECT DISTINCT category from question");
+        var cats = [];
+        for(i = 0; i < results.rows.length; i++){
+            cats.push(results.rows[i].category);
+        }
+        return cats;
     }
-    return cats;
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
+    }
 }
 
 //returns array of questions and answers from database
 async function getQuestionsAndAnswersFromDB(cat) {
-    var results = await pool.query("SELECT DISTINCT text, answer from question where category = " + '\'' + cat + '\'');
-    var questions = [];
-    var answers = [];
-    var qAndAs = [];
-    for(i = 0; i < results.rows.length; i++){
-        //console.log(results.rows[i]);
-        questions.push(results.rows[i].text);
-        answers.push(results.rows[i].answer);
-        //qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
+    try{
+        var results = await pool.query("SELECT DISTINCT text, answer from question where category = " + '\'' + cat + '\'');
+        var questions = [];
+        var answers = [];
+        var qAndAs = [];
+        for(i = 0; i < results.rows.length; i++){
+            //console.log(results.rows[i]);
+            questions.push(results.rows[i].text);
+            answers.push(results.rows[i].answer);
+            //qAndAs.push(results.rows[i].text + '`' + results.rows[i].answer); //using ` char as delimiter
+        }
+        questions.sort(() => Math.random() - 0.5);
+        answers.sort(() => Math.random() - 0.5);
+        for(i = 0; i < questions.length; i++){
+            qAndAs.push(questions[i] + '`' + answers[i]); //using ` char as delimiter
+        }
+        return qAndAs;
     }
-    questions.sort(() => Math.random() - 0.5);
-    answers.sort(() => Math.random() - 0.5);
-    for(i = 0; i < questions.length; i++){
-        qAndAs.push(questions[i] + '`' + answers[i]); //using ` char as delimiter
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
     }
-    return qAndAs;
 }
 
+//checks if selected answer is correct or not
 async function checkUserAnswer(question, answer){
-    question = queryFix(question);
-    console.log("SELECT COUNT(*) FROM question where text = " + '\"' + question + '\"' + ' AND answer = ' + '\"' + answer + '\"');
-    var results = await pool.query("SELECT COUNT(*) FROM question where text = " + '\'' + question + '\'' + ' AND answer = ' + '\'' + answer + '\'');
-    if(results.rows[0].count > 0){ //means the selected answer is correct
-        return true;
+    try{
+        question = queryFix(question);
+        console.log("SELECT COUNT(*) FROM question where text = " + '\"' + question + '\"' + ' AND answer = ' + '\"' + answer + '\"');
+        var results = await pool.query("SELECT COUNT(*) FROM question where text = " + '\'' + question + '\'' + ' AND answer = ' + '\'' + answer + '\'');
+        if(results.rows[0].count > 0){ //means the selected answer is correct
+            return true;
+        }
+        return false;
     }
-    return false;
-    //TODO -- add logic to return value to make decision based on
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
+    }
 }
 
 // stores game completion time and calculates total game time
@@ -291,16 +327,23 @@ async function gameOverDBUpdate(addr, completion_date){
 
 //returns array of lowest 15 times from database
 async function getScoresFromDB() {
-    var results = await pool.query("SELECT wallet_address FROM users WHERE login_date = " + '\'' + new Date().toLocaleDateString() + '\'' + " ORDER BY game_time");
-    var scores = [];
-    var maxResults = 15;
-    if(results.rows.length < maxResults){
-        maxResults = results.rows.length;
+    try{
+        var results = await pool.query("SELECT wallet_address FROM users WHERE login_date = " + '\'' + new Date().toLocaleDateString() + '\'' + " ORDER BY game_time");
+        var scores = [];
+        var maxResults = 15;
+        if(results.rows.length < maxResults){
+            maxResults = results.rows.length;
+        }
+        for(i = 0; i < maxResults; i++){
+            scores.push(results.rows[i].wallet_address);
+        }
+        return scores;
     }
-    for(i = 0; i < maxResults; i++){
-        scores.push(results.rows[i].wallet_address);
+    catch(err){
+        console.log(err);
+        console.log('ERROR!!');
+        return -1;
     }
-    return scores;
 }
 
 //=========================================
@@ -311,9 +354,9 @@ function isGameOver(data){
     var rowCounter = 0;
     var columnCounter = 0;
 
-    for(i = 0; i < data.length; i++){
-        console.log(data[i].name);
-    }
+    // for(i = 0; i < data.length; i++){
+    //     console.log(data[i].name);
+    // }
     
     //row checker
     for(i = 0; i < data.length; i++){

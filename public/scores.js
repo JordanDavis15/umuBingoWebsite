@@ -20,7 +20,7 @@ function createTable(data){
 
         btnArr[i]= document.createElement('td');
         btnArr[i].id = 'td' + i;
-        btnArr[i].name = i+1 + '.\t\t' + data[i]; //this is the value recieved in the post req
+        btnArr[i].name = i+1 + '. Wallet: ' + data[i]; //this is the value recieved in the post req
         btnArr[i].textContent = btnArr[i].name;
         
         //btnArr[i].addEventListener('click', tableSelPost);
