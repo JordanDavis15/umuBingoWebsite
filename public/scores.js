@@ -1,3 +1,7 @@
+function returnToLogin(){
+    location.replace("/login")
+}
+
 function getScores(){
 
     fetch('/scores', {

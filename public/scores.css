@@ -8,7 +8,7 @@
 }
 
 table{
-  width: 65%;
+  width: 85%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -42,3 +42,19 @@ th {
     height: 5em;
     text-align: center;
   }
+
+button{
+  background-color: #a200ff;
+  border-radius: 5px;
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+  height: 3em;
+  width: 15em;
+  border: #ffffff;
+  color: #ffffff;
+}
+
+button:hover{
+  background-color: #7101b3;
+}

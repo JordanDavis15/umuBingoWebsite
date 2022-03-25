@@ -178,7 +178,7 @@ app.post('/category', function(req, res) {
 
                     var gameOver = isGameOver(tmpBody);
                     body.push({'gameOver': gameOver}) //'X' denotes over, ' ' denotes bingo not achieved yet
-                    console.log('after game over');
+                    console.log('after game over check');
 
                     if(gameOver == 'X'){
                         gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
