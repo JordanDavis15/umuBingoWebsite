@@ -181,7 +181,13 @@ app.post('/category', function(req, res) {
                     console.log('after game over check');
 
                     if(gameOver == 'X'){
-                        gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
+                        (async () => {
+                            gameOverDBUpdate(req.cookies.userid, new Date().toLocaleDateString());
+                        })();
+
+                        (async () => {
+                            totalGameTimeDBUpdate(req.cookies.userid);
+                        })();
                     }
                 }
             
@@ -320,7 +326,19 @@ async function gameOverDBUpdate(addr, completion_date){
     }
     catch(err){
         console.log(err);
-        console.log('ERROR!!');
+        return -1;
+    }
+}
+
+async function totalGameTimeDBUpdate(addr){
+    try{
+        var times = await pool.query("SELECT start_time, completion_time FROM users WHERE wallet_address = " + '\'' + addr + '\'' + " AND login_date = " + '\'' + new Date().toLocaleDateString() + '\'')
+        console.log(times.rows[0].start_time + ', ' + times.rows[0].completion_time);
+        var totalGameTime = times.rows[0].completion_time - times.rows[0].start_time;
+        await pool.query("UPDATE users SET game_time = " + totalGameTime + " WHERE wallet_address = " + '\'' + addr + '\'' + "AND login_date = " + '\'' + new Date().toLocaleDateString() + '\'' );
+    }
+    catch(err){
+        console.log(err);
         return -1;
     }
 }
