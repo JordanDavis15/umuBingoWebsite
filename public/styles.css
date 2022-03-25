@@ -12,19 +12,17 @@
   background-color: #540085;
   color: white;
   border-radius: 3px;
-  width: 65%;
+  width: 75%;
   height: 1.4em;
-  font-size: 1.5vw;
+  font-size: 1.7vw;
   margin-right: auto;
   margin-left: auto;
 }
 
-.tableContainer{
-  width: 95%;
-}
+
 
 table {
-  width: 65%;
+  width: 75%;
   height: 35%;
 }
 
@@ -49,6 +47,7 @@ th {
   text-align: center;
   font-size: x-large;
 }
+
 .tableData td{
   background-color: #a200ff;
   border-radius: 10px;
