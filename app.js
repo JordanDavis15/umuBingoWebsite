@@ -62,6 +62,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //serve static resources
 //app.use(bodyParser.urlencoded({extended: false})); app.use(express.static(path.join(__dirname, '/public')));
 app.use('/public', express.static('./public'));
+app.use("./service-worker.js", express.static(__dirname + './service-worker.js'));
 
 
 /************************/
@@ -86,12 +87,12 @@ app.get('/', function (req, res) {
 //route to Login Page (alternate)
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/login.html');
-  });
+});
 
   //route to Login Page (alternate)
 app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/index.html');
-  });
+});
 
 
 /************************/
