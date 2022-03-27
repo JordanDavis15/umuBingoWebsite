@@ -78,7 +78,7 @@
             console.log("before registered service worker");
             if ('serviceWorker' in navigator){
               console.log("creating service worker")
-              navigator.serviceWorker.register('/service-worker.js')
+              navigator.serviceWorker.register('./service-worker.js')
               .then(function (registration)
               {
                 console.log('Service worker registered successfully');
