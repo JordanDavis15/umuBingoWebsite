@@ -358,7 +358,7 @@ async function totalGameTimeDBUpdate(addr){
 //returns array of lowest 15 times from database
 async function getScoresFromDB() {
     try{
-        var results = await pool.query("SELECT wallet_address FROM users WHERE login_date = " + '\'' + new Date().toLocaleDateString() + '\'' + " ORDER BY game_time");
+        var results = await pool.query("SELECT wallet_address FROM users WHERE game_time IS NOT NULL AND login_date = " + '\'' + new Date().toLocaleDateString() + '\'' + " ORDER BY game_time");
         var scores = [];
         var maxResults = 15;
         if(results.rows.length < maxResults){
