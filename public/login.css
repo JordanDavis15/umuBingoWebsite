@@ -20,7 +20,7 @@ html {
     align-items: center;
     background-color: white;
     border-radius: 7px;
-    box-shadow: 0px 0px 5px 2px rgb(43, 0, 63);
+    box-shadow: 0px 0px 5px 2px rgb(62, 0, 90);
   }
 
   #login-header {
@@ -90,6 +90,7 @@ html {
     background-color: #a200ff;
     cursor: pointer;
     outline: none;
+    box-shadow: 0px 0px 5px 2px rgb(255, 255, 255);
   }
 
   .divFormat{
@@ -98,4 +99,5 @@ html {
     justify-items: center;
     align-items: center;
     float: left;
+    /*margin-top: -100px;*/
   }
