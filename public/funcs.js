@@ -190,6 +190,7 @@ function incrementQuestionIndex(){
 
 function gameOver(data){
     document.getElementById('header').textContent = 'BINGO!! Game Over!';
+    location.replace("/scores");
 }
 
 

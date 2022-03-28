@@ -91,9 +91,14 @@ app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/login.html');
 });
 
-  //route to Login Page (alternate)
+//route to index Page -- this is the board
 app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/index.html');
+});
+
+//route to scoreboard
+app.get('/scores', (req, res) => {
+    res.sendFile(__dirname + '/scores.html');
 });
 
 app.get('/service-worker.js', (req, res) => {
