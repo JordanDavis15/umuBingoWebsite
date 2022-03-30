@@ -1,5 +1,5 @@
 function returnToLogin(){
-    location.replace("/login")
+    location.replace("/login");
 }
 
 function getScores(){

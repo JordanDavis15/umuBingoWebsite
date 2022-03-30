@@ -49,38 +49,26 @@
           <input type="text" name="SOLaddr"  class="login-form-field" placeholder="SOL wallet Address">
           <input type="submit" value="Login" id="login-form-submit">
         </form>
+        <br>
+        <button class="genButton" onclick="function faq(){location.replace('/faq');}faq();">FAQs</button>
       </div>
 
-      <!--
-      <div id="login-error-msg-holder">
-        <p id="login-error-msg">Invalid SOL address <span id="error-msg-second-line">and/or password</span></p>
-      </div> -->
 
-      
-      <!--
-      <div class="divFormat"> 
-        <form id="login-form" action="/main" method="POST">
-          <input type="text" name="SOLaddr"  class="login-form-field" placeholder="SOL wallet Address">
-          <input type="submit" value="Login" id="login-form-submit">
-        </form>
-      </div>
-      -->
-
-          <script>
-            console.log("before registered service worker");
-            if ('serviceWorker' in navigator){
-              console.log("creating service worker")
-              navigator.serviceWorker.register('./service-worker.js')
-              .then(function (registration)
-              {
-                console.log('Service worker registered successfully');
-              }).catch(function (e)
-              {
-                console.error('Error during service worker registration:', e);
-              });
-              console.log("after registered service worker");
-            }
-          </script>
+      <script>
+        console.log("before registered service worker");
+        if ('serviceWorker' in navigator){
+          console.log("creating service worker")
+          navigator.serviceWorker.register('./service-worker.js')
+          .then(function (registration)
+          {
+            console.log('Service worker registered successfully');
+          }).catch(function (e)
+          {
+            console.error('Error during service worker registration:', e);
+          });
+          console.log("after registered service worker");
+        }
+      </script>
     
     </main>
   </body>

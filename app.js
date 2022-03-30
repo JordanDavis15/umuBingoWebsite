@@ -101,6 +101,11 @@ app.get('/scores', (req, res) => {
     res.sendFile(__dirname + '/scores.html');
 });
 
+app.get('/faq', (req, res) => {
+    res.sendFile(__dirname + '/faq.html');
+});
+
+//route to send service worker to enable pwa support
 app.get('/service-worker.js', (req, res) => {
     res.sendFile(__dirname + '/service-worker.js');
 });

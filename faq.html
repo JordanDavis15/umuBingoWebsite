@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/public/faq.css">
+        <title>FAQs</title>
+    </head>
+
+    <body>
+        <h2 class="header2">Freqently Asked Questions</h2>
+        <button class="accordion">What is a Solana (SOL) wallet?</button>
+        <div class="panel">
+            <p>
+                A SOL wallet is an address that allows SOL or SOL tokens to be sent and received. These wallets often come in the form of 
+                software that is easily installed on any mobile device. After installing a SOL wallet, input the given address into the login 
+                screen to play today's game.
+            </p>
+        </div>
+        <button class="accordion">How do I play?</button>
+        <div class="panel">
+            <p>
+                After entering your SOL address and choosing a category of questions, a bingo card is presented to you. There is a question 
+                is displayed at the top of the screen which you should try to answer by choosing a square on the bingo card. If the answer is 
+                not on the board, click or press (on mobile) the question and it will display a new question. 
+            </p>
+        </div>
+        <button class="accordion">What should I do if I cannot find the correct answer to a question?</button>
+        <div class="panel">
+            <p>
+                Click or press (on mobile) the question to see a new question. 
+            </p>
+            <img src="/public/faqQuestion.png" alt="Question Help" style="width: 70%; height: 70%; margin-left: auto; margin-right: auto; display: block; border-radius: 9px;">
+        </div>
+        <script>
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+            
+            for (i = 0; i < acc.length; i++) {
+              acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                  panel.style.maxHeight = null;
+                } else {
+                  panel.style.maxHeight = panel.scrollHeight + "px";
+                } 
+              });
+            }
+        </script>
+        <button class="genButton" onclick="function retToLogin(){location.replace('/login');}retToLogin();">Return to Login</button>
+    </body>
+</html>

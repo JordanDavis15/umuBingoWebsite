@@ -93,6 +93,23 @@ html {
     box-shadow: 0px 0px 5px 2px rgb(255, 255, 255);
   }
 
+  .genButton {
+    width: 60%;
+    margin-top: -10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 7px;
+    border: none;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    background-color: #a200ff;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0px 0px 5px 2px rgb(255, 255, 255);
+  }
+
   .divFormat{
     width: 55%;
     height: 45%;
