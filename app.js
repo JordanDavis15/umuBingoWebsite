@@ -255,7 +255,7 @@ var server = app.listen(portNum, function () {
 //adds user address and playing date to users table
 async function addUserToDB(addr, login_date) {
     try{
-        await pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + addr + ", " + '\'' + login_date + '\'' + ")");
+        await pool.query("INSERT INTO users (wallet_address, login_date) VALUES (" + '\'' + addr + '\'' + ", " + '\'' + login_date + '\'' + ")");
     }
     catch(err){
         console.log('ERROR!!');
