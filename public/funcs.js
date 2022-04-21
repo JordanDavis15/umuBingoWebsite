@@ -1,3 +1,18 @@
+/*-------------------------------------------------------------------
+|  File: funcs.js
+|
+|  Purpose:  This file contains the code that is used in processing
+|            actions by the user on the board and is responsible for 
+|            board updates. 
+| 
+|
+|  Author: Jordan Davis (4/27/2022)
+|
+|
+|  Change Log:
+|
+*-------------------------------------------------------------------*/
+
 var questionIndex = 0;
 var qAndAs = null;
 

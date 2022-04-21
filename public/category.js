@@ -1,3 +1,19 @@
+/*-------------------------------------------------------------------
+|  File: category.js
+|
+|  Purpose:  This file contains the code that is used in gathering
+|            categories from the server and displaying them for a
+|            user to select. It also will send the user's choice
+|            back to the server.
+| 
+|
+|  Author: Jordan Davis (4/27/2022)
+|
+|
+|  Change Log:
+|
+*-------------------------------------------------------------------*/
+
 function getCategories(){
 
     fetch('/category', {

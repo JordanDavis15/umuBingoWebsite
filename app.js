@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------
+|  File: app.js
+|
+|  Purpose:  This file contains the code that creates the server
+|            and it houses all logic for routing requests.
+| 
+|
+|  Author: Jordan Davis (4/27/2022)
+|
+|
+|  Change Log:
+|
+*-------------------------------------------------------------------*/
+
 var express = require('express');
 var cookieParser = require('cookie-parser');
 
@@ -445,13 +459,13 @@ function isGameOver(data){
 // SQL input cleaning / reformatting
 //=========================================
 
+//will remove all invalid chars from input and return cleaned string
 function cleanInput(string){
-    //string = string.replaceAll('\'', '');
-    //string = string.replaceAll('\"', '');
     string = string.replaceAll(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
     return string;
 }
 
+//will fix all instances of inserting a string into a postgres db where two escape chars are need for the two single quotes
 function queryFix(string){
     return string.replaceAll('\'', '\'\'');
 }

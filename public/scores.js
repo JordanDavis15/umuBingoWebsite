@@ -1,3 +1,18 @@
+/*-------------------------------------------------------------------
+|  File: scores.js
+|
+|  Purpose:  This file contains the code that is used to request 
+|            score from the server and display those scores to the
+|            scoreboard. 
+| 
+|
+|  Author: Jordan Davis (4/27/2022)
+|
+|
+|  Change Log:
+|
+*-------------------------------------------------------------------*/
+
 function returnToLogin(){
     location.replace("/login");
 }
