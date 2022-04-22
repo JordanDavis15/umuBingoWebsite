@@ -55,6 +55,10 @@ th {
     border-radius: 10px;
     height: 5em;
     text-align: center;
+    /*used to disable text selection*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
   }
 .tableDataGroups td:hover{
     background-color: #8100cc;
