@@ -31,6 +31,10 @@
   font-size: 2.3vw;
   margin-right: auto;
   margin-left: auto;
+    /*used to disable text selection*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 
@@ -97,4 +101,8 @@ th {
 #boardTable td{
   width: 25%;
   font-size: calc(20vw / 10);
+  /*used to disable text selection*/
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
