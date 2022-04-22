@@ -31,10 +31,10 @@
   font-size: 2.3vw;
   margin-right: auto;
   margin-left: auto;
-    /*used to disable text selection*/
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+  /*used to disable text selection*/
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 
