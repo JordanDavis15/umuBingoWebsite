@@ -134,11 +134,10 @@ app.post('/login', function(req, res) {
     var body = req.body;
     if(body.SOLaddr != undefined || body.SOLaddr == ' '){
         
-
         //update users table
         (async () => {
             console.log('adding user address and date to users table');
-            var data = await addUserToDB(body.SOLaddr, new Date().toLocaleDateString()); //2nd argument gets current system date
+            var data = await addUserToDB(cleanInput(body.SOLaddr), new Date().toLocaleDateString()); //2nd argument gets current system date
             console.log('response from adduser call' + data);
             if(data == -1){
                 res.sendFile(path.join(__dirname, '/scores.html'));
